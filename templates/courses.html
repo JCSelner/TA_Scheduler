@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,8 @@
 </head>
 <body>
 
+<h1>Courses</h1>
+<a href="/createCourse/">Create new course</a>
 <table>
     {% csrf_token %}
 
@@ -25,5 +27,8 @@
     {% endfor %}
 
 </table>
+
+<a href="/home/">Home</a>
+
 </body>
 </html>
