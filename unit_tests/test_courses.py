@@ -1,10 +1,93 @@
-import unittest
+from classes.courseClass import CourseClass
+from project_app.models import Course
+from django.test import TestCase
+# import unittest
 
 
-class MyTestCase(unittest.TestCase):
-    def test_something(self):
-        self.assertEqual(True, False)  # add assertion here
+class TestCreateCourse(TestCase):
+
+    def setUp(self):
+        self.course = CourseClass()
+        self.math101 = Course.objects.create(courseName="Math 101", courseSemester="Fall 2022", courseID=123)
+
+    def test_noInput(self):
+        with self.assertRaises(ValueError):
+            self.course.createCourse()
+
+    def test_addCourseIDAlreadyInDB(self):
+        self.assertFalse(self.course.createCourse("Math 101", "Fall 2022", 123),
+                         "Allows adding of an existing courseID")
+
+    def test_addCourseNameAlreadyInDB(self):
+        self.assertFalse(self.course.createCourse("Math 101", "Fall 2022", 456),
+                         "Allows adding of an existing course name")
+
+    def test_differentSemesterSameName(self):
+        self.assertTrue(self.course.createCourse("Math 101", "Fall 2028", 456), "Not allows adding different semester")
+        coursesList = Course.objects.all()
+        self.assertEqual(len(coursesList), 2)
+        # test if added
+
+    def test_differentNameSameSemester(self):
+        self.assertTrue(self.course.createCourse("Math 102", "Fall 2022", 456), "Not allow adding of different name")
+        coursesList = Course.objects.all()
+        self.assertEqual(len(coursesList), 2)
+
+    def test_differentEverything(self):
+        self.assertTrue(self.course.createCourse("Math 102", "Fall 2020", 456), "Not allows adding different everything")
+        coursesList = Course.objects.all()
+        self.assertEqual(len(coursesList), 2)
 
 
-if __name__ == '__main__':
-    unittest.main()
+class TestDeleteCourse(TestCase):
+
+    def setUp(self):
+        self.course = CourseClass()
+        self.math101 = Course.objects.create(courseName="Math 101", courseSemester="Fall 2022", courseID=123)
+
+    def test_noInput(self):
+        self.assertFalse(self.course.deleteCourse(), "Allows deletion of an Non-existing courseID")
+
+    def test_deleteNonexistant(self):
+        self.assertFalse(self.course.deleteCourse(456), "Allows deletion of an Non-existing courseID")
+
+    def test_deleteExistant(self):
+        self.assertTrue(self.course.deleteCourse(123), "Not allows deletion of an Existing courseID")
+        coursesList = Course.objects.all()
+        self.assertEqual(len(coursesList), 0)
+
+
+class TestViewCourses(TestCase):
+    def setUp(self):
+        self.course = CourseClass()
+        self.math101 = Course.objects.create(courseName="Math 101", courseSemester="Fall 2022", courseID=123)
+        # add course "Math 101" "Fall 2022" Course ID: 123 in database
+
+    def test_noInput(self):
+        with self.assertRaises(ValueError):
+            self.course.viewCourse()
+
+    def test_viewExistant(self):
+        self.assertEqual(self.course.viewCourse(123), "Math 101 Fall 2022 ", self.course.viewCourse(123))
+
+    def test_viewNonExistant(self):
+        with self.assertRaises(ValueError):
+            self.course.viewCourse(456)
+
+
+class TestIsInDB(TestCase):
+    def setUp(self):
+        self.course = CourseClass()
+        self.math101 = Course.objects.create(courseName="Math 101", courseSemester="Fall 2022", courseID=123)
+        # add course "Math 101" "Fall 2020" Course ID: 123 in database
+
+    def test_noInput(self):
+        self.assertFalse(self.course.isInDB())
+
+    def test_existant(self):
+        self.assertTrue(self.course.isInDB(123))
+
+    def test_nonExistant(self):
+        self.assertFalse(self.course.isInDB(456))
+
+
