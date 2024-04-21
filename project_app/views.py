@@ -3,7 +3,8 @@ from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from datetime import datetime
 from project_app.models import User, Course, Assignment, Lab, Roles
-
+from classes.courseClass import CourseClass
+from random import randint
 
 # Create your views here.
 
@@ -16,6 +17,17 @@ class Courses(View):
         courses = Course.objects.all()
         return render(request, "courses.html", {"courses": courses})
 
+class CreateCourse(View):
+    def get(self, request):
+        return render(request, 'createCourse.html')
+
+    def post(self, request):
+        courses = Course.objects.all()
+        name = request.POST.get('name')
+        semester = request.POST.get('semester')
+        description = request.POST.get('description')
+        CourseClass.createCourse(name, semester, len(courses)+1, description)
+        return render(request, "courses.html", {"courses": courses})
 
 
 class Login(View):
