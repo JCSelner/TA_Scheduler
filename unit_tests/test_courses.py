@@ -1,7 +1,7 @@
 from classes.courseClass import CourseClass
 from project_app.models import Course
 from django.test import TestCase
-# import unittest
+
 
 
 class TestCreateCourse(TestCase):
