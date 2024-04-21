@@ -6,5 +6,23 @@
 </head>
 <body>
 
+<table>
+    {% csrf_token %}
+
+    <tr>
+        <th>Name</th>
+        <th>Semester</th>
+        <th>description</th>
+    </tr>
+    {% for c in courses %}
+    <tr>
+        <td>{{c.courseName}}</td>
+        <td>{{c.courseSemester}}</td>
+        <td>{{c.courseDescription}}</td>
+    </tr>
+
+    {% endfor %}
+
+</table>
 </body>
 </html>

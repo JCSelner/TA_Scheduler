@@ -10,10 +10,12 @@ from project_app.models import User, Course, Assignment, Lab, Roles
 
 class Courses(View):
     def get(self, request):
-        pass
+        return render(request, 'courses.html')
 
     def post(self, request):
-        pass
+        courses = Course.objects.all()
+        return render(request, "courses.html", {"courses": courses})
+
 
 
 class Login(View):
