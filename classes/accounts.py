@@ -1,4 +1,3 @@
-from TA_Assigner.models import User
 class Account(object):
     def __init__(self, userID='admin', password='admin', email=None, phone=0, firstName='first',
                  lastName='last', role='TA', address=None):
@@ -12,31 +11,45 @@ class Account(object):
         self.address = address
 
     def createUser(self, other):
-        pass
+        self.userID = other.userID
+        self.password = other.password
+        self.email = other.email
+        self.phone = other.phone
+        self.firstName = other.firstName
+        self.lastName = other.lastName
+        self.role = other.role
+        self.address = other.address
 
     def deleteUser(self):
-        pass
+        self.userID = 'admin'
+        self.password = 'admin'
+        self.email = None
+        self.phone = 0
+        self.firstName = 'first'
+        self.lastName = 'last'
+        self.role = 'TA'
+        self.address = None
 
     def editUserPassword(self, other):
-        pass
+        self.password = other
 
     def editUserID(self, other):
-        pass
+        self.userID = other
 
     def editUserEmail(self, other):
-        pass
+        self.email = other
 
     def editUserPhoneNumber(self, other):
-        pass
+        self.phone = other
 
     def editUserAddress(self, other):
-        pass
+        self.address = other
 
     def editUserFirstName(self, other):
-        pass
+        self.firstName = other
 
     def editUserLastName(self, other):
-        pass
+        self.lastName = other
 
     def editUserRole(self, other):
-        pass
+        self.role = other
