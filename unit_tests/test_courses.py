@@ -11,7 +11,6 @@ class TestCreateCourse(TestCase):
         self.math101 = Course.objects.create(courseName="Math 101", courseSemester="Fall 2022", courseID=123)
 
     def test_noInput(self):
-
         self.assertFalse(self.course.createCourse(), "Course should not be created")
 
     def test_addCourseIDAlreadyInDB(self):
