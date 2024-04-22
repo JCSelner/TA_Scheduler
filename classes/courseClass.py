@@ -5,10 +5,11 @@ class CourseClass:
 
     def isInDB(self, courseID = 0):
         coursesList = Course.objects.filter(courseID=courseID)
+
         return len(coursesList) == 1
 
-    def createCourse(self, name= "", semester="", courseID=0, description=""):
-        if (self.isInDB(courseID)):
+    def createCourse(self, name="", semester="", courseID=0, description=""):
+        if (self.isInDB(courseID) or courseID == 0):
             return False
 
         coursesList = Course.objects.filter(courseName=name, courseSemester=semester)
