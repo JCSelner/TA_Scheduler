@@ -20,7 +20,7 @@ class User(models.Model):
     lastName = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.firstName, self.lastName, self.email, self.phone, self.address
+        return self.firstName + " " + self.lastName + " " + self.email + " " + self.phone + " " + self.address
 
 
 class Course(models.Model):
@@ -30,7 +30,7 @@ class Course(models.Model):
     courseSemester = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.courseName, self.courseSemester
+        return self.courseName + " " + self.courseSemester
 
 
 class Assignment(models.Model):
@@ -38,7 +38,7 @@ class Assignment(models.Model):
     userID = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.courseID, self.userID
+        return self.courseID.__str__() + " " + self.userID.__str__()
 
 
 class Lab(models.Model):
@@ -47,4 +47,4 @@ class Lab(models.Model):
     labID = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.taID, self.courseID, self.labID
+        return self.taID.__str__() + " " + self.courseID.__str__() + " " + self.labID.__str__()

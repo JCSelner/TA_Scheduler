@@ -1,10 +1,34 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Courses</title>
 </head>
 <body>
+
+<h1>Courses</h1>
+<a href="/createCourse/">Create new course</a>
+<table>
+    {% csrf_token %}
+
+    <tr>
+        <th>Name</th>
+        <th>Semester</th>
+        <th>description</th>
+    </tr>
+    {% for c in courses %}
+    <tr>
+        <td>{{c.courseName}}</td>
+        <td>{{c.courseSemester}}</td>
+        <td>{{c.courseDescription}}</td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+<a href="/home/">Home</a>
 
 </body>
 </html>

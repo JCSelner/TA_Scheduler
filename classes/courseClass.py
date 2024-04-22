@@ -3,12 +3,13 @@ from project_app.models import Course
 
 class CourseClass:
 
-    def isInDB(self, courseID):
+    def isInDB(self, courseID = 0):
         coursesList = Course.objects.filter(courseID=courseID)
+
         return len(coursesList) == 1
 
-    def createCourse(self, name, semester, courseID, description=""):
-        if (self.isInDB(courseID)):
+    def createCourse(self, name="", semester="", courseID=0, description=""):
+        if (self.isInDB(courseID) or courseID == 0):
             return False
 
         coursesList = Course.objects.filter(courseName=name, courseSemester=semester)
@@ -19,14 +20,14 @@ class CourseClass:
 
         return True
 
-    def deleteCourse(self, courseID):
+    def deleteCourse(self, courseID=0):
         if (not self.isInDB(courseID)):
             return False
         # delete course of that type
         Course.objects.filter(courseID=courseID).delete()
         return True
 
-    def viewCourse(self, courseID):
+    def viewCourse(self, courseID=0):
         if (not self.isInDB(courseID)):
             raise ValueError
         coursesList = Course.objects.filter(courseID=courseID)
