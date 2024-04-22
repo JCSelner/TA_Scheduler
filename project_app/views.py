@@ -27,7 +27,7 @@ class CreateCourse(View):
         semester = request.POST.get('semester')
         description = request.POST.get('description')
         CourseClass.createCourse(name, semester, len(courses)+1, description)
-        return render(request, "courses.html", {"courses": courses})
+        return redirect('courses')
 
 
 class Login(View):
