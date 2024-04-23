@@ -38,9 +38,7 @@ class Login(View):
         username = request.POST.get('userID')
         password = request.POST.get('password')
 
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(request, user)
+        if User.objects.filter(userID=username, password=password).exists():
             return redirect('home')
         else:
             error_message = "Invalid username or password."
