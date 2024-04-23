@@ -11,10 +11,12 @@ from random import randint
 
 class Courses(View):
     def get(self, request):
-        return render(request, 'courses.html')
+        courses = Course.objects.all()
+        return render(request, 'courses.html',{"courses": courses})
 
     def post(self, request):
         courses = Course.objects.all()
+        print(courses)
         return render(request, "courses.html", {"courses": courses})
 
 class CreateCourse(View):
@@ -38,9 +40,7 @@ class Login(View):
         username = request.POST.get('userID')
         password = request.POST.get('password')
 
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(request, user)
+        if User.objects.filter(userID=username, password=password).exists():
             return redirect('home')
         else:
             error_message = "Invalid username or password."
