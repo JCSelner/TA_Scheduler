@@ -1,21 +1,20 @@
 from project_app.models import Section, Course
 
 class SectionClass:
-    def __init__(self, section_id, sectionType, courseID):
+    def __init__(self, section_id, sectionType):
         self.sectionID = section_id
         self.sectionType = sectionType
-        self.courseID = courseID
     def sectInDB(self, sectionID):
         sectionList = Section.objects.filter(sectionID=sectionID)
         return len(sectionList)==1
-    def createSection(self, sectionID, sectionType, courseID):
+    def createSection(self, sectionID, sectionType, course):
         if self.sectInDB(sectionID):
             return False
-        sectionList = Section.objects.filter(sectionID=sectionID, sectionType=sectionType, courseID=courseID)
+        sectionList = Section.objects.filter(sectionID=sectionID, sectionType=sectionType, courseID=course)
         if len(sectionList)!=0:
             return False
 
-        Section.objects.create(sectionID=sectionID, sectionType=sectionType, courseID=courseID)
+        Section.objects.create(sectionID=sectionID, sectionType=sectionType, courseID=course)
         if sectionType != "Lab" and sectionType != "Lecture":
             return False
         return True
@@ -31,4 +30,4 @@ class SectionClass:
             return False
         sectionList = Section.objects.filter(sectionID=sectionID)
         section_view = sectionList[0]
-        return section_view.sectionID + " " + section_view.sectionType + " " + section_view.courseID
+        return section_view.sectionID + " " + section_view.sectionType + " " + section_view.course.courseID

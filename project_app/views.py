@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from datetime import datetime
-from project_app.models import User, Course, Assignment, Lab, Roles
+from project_app.models import User, Course, Assignment, Section, Roles
 from classes.courseClass import CourseClass
 from random import randint
 

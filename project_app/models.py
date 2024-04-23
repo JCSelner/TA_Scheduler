@@ -48,7 +48,6 @@ class Section(models.Model):
     courseID = models.ForeignKey(Course, on_delete=models.CASCADE)
     taID = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     labID = models.CharField(max_length=20)
-    type = models.Charfield(max_length=10, choices=SectionTypes.choices)
-
+    type = models.CharField(max_length=10, choices=SectionTypes.choices)
     def __str__(self):
         return self.taID.__str__() + " " + self.courseID.__str__() + " " + self.labID.__str__()
