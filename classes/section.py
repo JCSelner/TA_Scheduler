@@ -1,8 +1,8 @@
 from project_app.models import Section, Course
 
 class SectionClass:
-    def __init__(self, section_id, sectionType):
-        self.sectionID = section_id
+    def __init__(self, sectionID, sectionType):
+        self.sectionID = sectionID
         self.sectionType = sectionType
     def sectInDB(self, sectionID):
         sectionList = Section.objects.filter(sectionID=sectionID)

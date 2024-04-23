@@ -8,9 +8,11 @@ class Roles(models.TextChoices):
     ta = "T"
     admin = "A"
 
+
 class SectionTypes(models.TextChoices):
     Lecture = "Lecture"
     Lab = "Lab"
+
 
 class User(models.Model):
     userID = models.CharField(max_length=20)
@@ -47,7 +49,8 @@ class Assignment(models.Model):
 class Section(models.Model):
     courseID = models.ForeignKey(Course, on_delete=models.CASCADE)
     taID = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    labID = models.CharField(max_length=20)
+    sectionID = models.CharField(max_length=20)
     type = models.CharField(max_length=10, choices=SectionTypes.choices)
+
     def __str__(self):
-        return self.taID.__str__() + " " + self.courseID.__str__() + " " + self.labID.__str__()
+        return self.sectionID + " " + self.type

@@ -7,18 +7,18 @@ import unittest
 class testCreateSection(TestCase):
 
     def setUp(self):
-       self.section = SectionClass("","","")
+       self.section = SectionClass()
        self.course = CourseClass()
-       self.courseA = self.course.createCourse(name="A", semester="Fall 2024", courseID=1, description="")
-       self.courseB = self.course.createCourse(name="B", semester="Fall 2024", courseID=2, description="")
-       self.sectionA = Section.objects.create(sectionID = 3, sectionType="Lecture", courseID=self.courseA)
-       self.sectionB = Section.objects.create(sectionID = 4, sectionType="Lab", courseID=self.courseB)
+       self.courseA_created = Course.objects.createCourse(name="A", semester="Fall 2024", courseID=1, description="")
+       self.courseB_created = Course.objects.createCourse(name="B", semester="Fall 2024", courseID=2, description="")
+       self.sectionA = Section.objects.create(sectionID = "A", sectionType="Lecture", courseID=courseA)
+       self.sectionB = Section.objects.create(sectionID = "B", sectionType="Lab", courseID=courseB)
 
     def test_noInput(self):
-        self.assertFalse(self.section.createSection("","",""), "No inputs, course should not have been created.")
+        self.assertFalse(self.section.createSection("","",), "No inputs, course should not have been created.")
     def test_preExists(self):
-        self.assertFalse(self.section.createSection(3, "Lecture", self.courseA), "Section already exists.")
-        self.assertFalse(self.section.createSection(4, "Lab", self.courseB), "Section already exists.")
+        self.assertFalse(self.section.createSection(3, "Lecture", ), "Section already exists.")
+        self.assertFalse(self.section.createSection(4, "Lab", ), "Section already exists.")
     def test_nonexistantCourse(self):
         self.assertFalse(self.section.createSection(3, "Lecture", 3), "CourseID does not exist.")
         self.assertFalse(self.section.createSection(4, "Lab", 4), "CourseID does not exist.")
