@@ -25,10 +25,12 @@ class CreateCourse(View):
 
     def post(self, request):
         courses = Course.objects.all()
-        name = request.POST.get('name')
-        semester = request.POST.get('semester')
-        description = request.POST.get('description')
-        CourseClass.createCourse(name, semester, len(courses)+1, description)
+        name = request.POST.get('Name')
+        semester = request.POST.get('Semester')
+        description = request.POST.get('Description')
+        CourseClass.createCourse(CourseClass, name, semester, len(courses)+1, description)
+        courses = Course.objects.all()
+        print(courses)
         return redirect('courses')
 
 
