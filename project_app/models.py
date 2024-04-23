@@ -25,7 +25,7 @@ class User(models.Model):
 
 class Course(models.Model):
     courseName = models.CharField(max_length=20)
-    courseDescription = models.CharField(max_length=20)
+    courseDescription = models.CharField(max_length=120)
     courseID = models.IntegerField(primary_key=True)
     courseSemester = models.CharField(max_length=10)
 
