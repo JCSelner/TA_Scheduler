@@ -11,10 +11,12 @@ from random import randint
 
 class Courses(View):
     def get(self, request):
-        return render(request, 'courses.html')
+        courses = Course.objects.all()
+        return render(request, 'courses.html',{"courses": courses})
 
     def post(self, request):
         courses = Course.objects.all()
+        print(courses)
         return render(request, "courses.html", {"courses": courses})
 
 class CreateCourse(View):
