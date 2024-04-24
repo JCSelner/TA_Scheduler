@@ -6,18 +6,20 @@ from project_app.models import User, Course, Assignment, Section, Roles
 from classes.courseClass import CourseClass
 from random import randint
 
+
 # Create your views here.
 
 
 class Courses(View):
     def get(self, request):
         courses = Course.objects.all()
-        return render(request, 'courses.html',{"courses": courses})
+        return render(request, 'courses.html', {"courses": courses})
 
     def post(self, request):
         courses = Course.objects.all()
         print(courses)
         return render(request, "courses.html", {"courses": courses})
+
 
 class CreateCourse(View):
     def get(self, request):
@@ -28,7 +30,7 @@ class CreateCourse(View):
         name = request.POST.get('Name')
         semester = request.POST.get('Semester')
         description = request.POST.get('Description')
-        CourseClass.createCourse(CourseClass, name, semester, len(courses)+1, description)
+        CourseClass.createCourse(CourseClass, name, semester, len(courses) + 1, description)
         courses = Course.objects.all()
         print(courses)
         return redirect('courses')
@@ -61,3 +63,62 @@ class Logout(View):
     def get(self, request):
         logout(request)
         return redirect('login')
+
+
+class ManageUser(View):
+    def get(self, request):
+        return render(request, 'account.html')
+
+    def post(self, request):
+        pass
+
+
+class CreateUser(View):
+    def get(self, request):
+        return render(request, 'createUser.html', {'roles': Roles.choices})
+
+    def post(self, request):
+        username = request.POST['userID']
+        password = request.POST['password']
+        email = request.POST['email']
+        contact_number = request.POST['phone']
+        address = request.POST['address']
+        role = request.POST['role']
+        first_name = request.POST['firstName']
+        last_name = request.POST['lastName']
+
+        User.objects.create(userID=username,
+                            password=password,
+                            email=email,
+                            phone=contact_number,
+                            address=address,
+                            role=role,
+                            firstName=first_name,
+                            lastName=last_name)
+        return render(request, 'createUser.html', {'roles': Roles.choices})
+
+
+class DeleteUser(View):
+    def get(self, request):
+        users = User.objects.filter().all()
+        return render(request, 'deleteUser.html',
+                      {'roles': Roles.choices,
+                       'users': users})
+
+    def post(self, request):
+        # query (filter) for users
+        users = User.objects.filter().all()
+        return render(request, 'deleteUser.html',
+                      {'roles': Roles.choices,
+                       'users': users})
+
+
+class ExtendDeleteUsers(View):
+    def post(self, request):
+        users = User.objects.filter().all()
+        user_id = request.POST.get('userID')
+        user = User.objects.get(userID=user_id)
+        user.delete()
+        return render(request, 'deleteUser.html',
+                      {'roles': Roles.choices,
+                       'users': users})
