@@ -4,9 +4,9 @@ from django.db import models
 # Create your models here.
 
 class Roles(models.TextChoices):
-    instructor = "I"
-    ta = "T"
-    admin = "A"
+    INSTRUCTOR = "Instructor"
+    TA = "TA"
+    ADMIN = "Admin"
 
 
 class SectionTypes(models.TextChoices):
@@ -20,12 +20,17 @@ class User(models.Model):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20)
     address = models.CharField(max_length=100)
-    role = models.CharField(max_length=1, choices=Roles.choices)
+    role = models.CharField(max_length=13, choices=Roles.choices, default=Roles.ADMIN)
     firstName = models.CharField(max_length=20)
     lastName = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.firstName + " " + self.lastName + " " + self.email + " " + self.phone + " " + self.address
+        return (self.userID
+                + " " + self.firstName
+                + " " + self.lastName
+                + " " + self.email
+                + " " + self.phone
+                + " " + self.address)
 
 
 class Course(models.Model):
