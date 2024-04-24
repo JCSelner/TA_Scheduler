@@ -1,10 +1,44 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/delete_user_style.css' %}">
     <title>Delete User</title>
 </head>
 <body>
+<h1 class="header">Delete User</h1>
+<form action="{% url 'deleteUser' %}" method="post">
+    {% csrf_token %}
+    <br><br>
 
+    <table id="user_table">
+        <tr>
+            <th>Username</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+        {% for i in users %}
+            <tr>
+                <td>{{ i.userID }}</td>
+                <td>{{ i.firstName }}</td>
+                <td>{{ i.lastName }}</td>
+                <td>{{ i.role }}</td>
+                <td>
+                    <form action="{% url 'extendDeleteUser' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="userID" value="{{ i.userID }}">
+                        <button type="submit" class="button">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</form>
+<ul>
+    <li><a href="{% url 'manageUser' %}">Manage Users</a></li>
+</ul>
 </body>
 </html>
