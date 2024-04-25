@@ -8,12 +8,16 @@ class CourseClass:
 
         return len(coursesList) == 1
 
-    def createCourse(self, name="", semester="", courseID=0, description=""):
+    def createCourse(self, name="", semester= Semester().objects.create(Season=Seasons.Fall, year=2024), courseID=0, description=""):
         if (self.isInDB(courseID) or courseID == 0):
             return False
 
         coursesList = Course.objects.filter(courseName=name, courseSemester=semester)
+
         if (len(coursesList) != 0):
+            return False
+
+        if (semester.year < 2024):
             return False
 
         Course.objects.create(courseName= name, courseSemester=semester, courseID= courseID, courseDescription=description)

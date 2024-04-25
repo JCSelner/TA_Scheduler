@@ -3,15 +3,15 @@ from project_app.models import Course, Semester, Seasons
 from django.test import TestCase
 
 
-
 class TestCreateCourse(TestCase):
 
     def setUp(self):
         self.course = CourseClass()
-        self.semester = Semester().objects.create(Seasons="Fall", year=2024)
-        self.diffSemester = Semester().objects.create(Seasons="Fall", year=2028)
-        self.negSemester = Semester().objects.create(Seasons="Fall", year=-2029)
-        self.previousSemester = Semester().objects.create(Seasons="Fall", year=2023)
+        self.fall = Seasons.Fall
+        self.semester = Semester().objects.create(Season=self.fall, year=2024)
+        self.diffSemester = Semester().objects.create(Season=self.fall, year=2028)
+        self.negSemester = Semester().objects.create(Season=self.fall, year=-2029)
+        self.previousSemester = Semester().objects.create(Season=self.fall, year=2023)
         self.math101 = Course.objects.create(courseName="Math 101", courseSemester=self.semester, courseID=123)
 
     def test_noInput(self):
@@ -47,11 +47,13 @@ class TestCreateCourse(TestCase):
     def test_previousSemester(self):
         self.assertFalse(self.course.createCourse("Math 102", self.previousSemester, 456),"Allows semester before 2024")
 
+
 class TestDeleteCourse(TestCase):
 
     def setUp(self):
         self.course = CourseClass()
-        self.semester = Semester().objects.create(Seasons="Fall", year=2024)
+        self.fall = Seasons.Fall
+        self.semester = Semester().objects.create(Season=self.fall, year=2024)
         self.math101 = Course.objects.create(courseName="Math 101", courseSemester=self.semester, courseID=123)
 
     def test_noInput(self):
@@ -69,7 +71,8 @@ class TestDeleteCourse(TestCase):
 class TestViewCourses(TestCase):
     def setUp(self):
         self.course = CourseClass()
-        self.semester = Semester().objects.create(Seasons="Fall", year=2024)
+        self.fall = Seasons.Fall
+        self.semester = Semester().objects.create(Season=self.fall, year=2024)
         self.math101 = Course.objects.create(courseName="Math 101", courseSemester=self.semester, courseID=123)
 
     def test_noInput(self):
@@ -87,7 +90,8 @@ class TestViewCourses(TestCase):
 class TestIsInDB(TestCase):
     def setUp(self):
         self.course = CourseClass()
-        self.semester = Semester().objects.create(Seasons="Fall", year=2024)
+        self.fall = Seasons.Fall
+        self.semester = Semester().objects.create(Season=self.fall, year=2024)
         self.math101 = Course.objects.create(courseName="Math 101", courseSemester=self.semester, courseID=123)
 
 
