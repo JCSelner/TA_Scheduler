@@ -17,13 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from project_app.views import Courses, Login, Logout, Home, CreateCourse
+from project_app.views import (Courses, Login, Logout, Home, CreateCourse, ManageUser, CreateUser, DeleteUser,
+                               ExtendDeleteUsers)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', Login.as_view(), name='login'),
     path('home/', Home.as_view(), name='home'),
+    path('manageUser/', ManageUser.as_view(), name='manageUser'),
+    path('createUser/', CreateUser.as_view(), name='createUser'),
+    path('deleteUser/', DeleteUser.as_view(), name='deleteUser'),
+    path('deletedUser/', ExtendDeleteUsers.as_view(), name='extendDeleteUser'),
     path('courses/', Courses.as_view(), name='courses'),
     path('home/logout/', Logout.as_view(), name='logout'),
     path('createCourse/', CreateCourse.as_view(), name='createCourse'),
-    ]
+]

@@ -1,5 +1,5 @@
 from classes.courseClass import CourseClass
-from project_app.models import Course
+from project_app.models import Course, Semester, Seasons
 from django.test import TestCase
 
 
@@ -8,6 +8,7 @@ class TestCreateCourse(TestCase):
 
     def setUp(self):
         self.course = CourseClass()
+        self.semester = Semester().objects.create(Seasons="Fall", year=2024)
         self.math101 = Course.objects.create(courseName="Math 101", courseSemester="Fall 2022", courseID=123)
 
     def test_noInput(self):

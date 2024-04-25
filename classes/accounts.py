@@ -1,3 +1,5 @@
+from project_app.models import User
+
 class Account(object):
     def __init__(self, userID='admin', password='admin', email=None, phone=0, firstName='first',
                  lastName='last', role='TA', address=None):
@@ -53,3 +55,10 @@ class Account(object):
 
     def editUserRole(self, other):
         self.role = other
+
+    def save_details(self):
+        account = User.objects.create(userID=self.userID, password=self.password,
+                                      email=self.email,phone=self.phone,firstName=self.firstName,
+                                      lastName=self.lastName,role=self.role,address=self.address)
+        return f"{account.firstName, account.lastName} with ID {account.userID} saved to the db"
+
