@@ -12,8 +12,17 @@ class Roles(models.TextChoices):
 class SectionTypes(models.TextChoices):
     Lecture = "Lecture"
     Lab = "Lab"
+class Seasons(models.TextChoices):
+    Winter = "Winter"
+    Spring = "Spring"
+    Summer = "Summer"
+    Fall = "Fall"
+class Term(models.Model):
+    season = models.CharField(max_length=50, choices=Seasons.choices)
+    year = models.IntegerField()
 
-
+    def __str__(self):
+        return self.season + " " + self.year.__str__()
 class User(models.Model):
     userID = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
@@ -32,10 +41,11 @@ class Course(models.Model):
     courseName = models.CharField(max_length=50)
     courseDescription = models.CharField(max_length=1000)
     courseID = models.IntegerField(primary_key=True)
-    courseSemester = models.CharField(max_length=10)
+    courseSemester = models.ForeignKey(Term, on_delete=models.CASCADE)
+    courseCode = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.courseName + " " + self.courseSemester
+        return self.courseName + " " + self.courseSemester.__str__()
 
 
 class Assignment(models.Model):
@@ -47,7 +57,7 @@ class Assignment(models.Model):
 
 
 class Section(models.Model):
-    courseID = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     taID = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     sectionID = models.CharField(max_length=20)
     type = models.CharField(max_length=10, choices=SectionTypes.choices)
