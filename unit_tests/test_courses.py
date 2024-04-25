@@ -9,10 +9,10 @@ class TestCreateCourse(TestCase):
         self.course = CourseClass()
         self.fall = Seasons.Fall
         self.currentYear = 2024
-        self.semester = Semester().objects.create(Season=self.fall, year=2024)
-        self.diffSemester = Semester().objects.create(Season=self.fall, year=2028)
-        self.negSemester = Semester().objects.create(Season=self.fall, year=-2029)
-        self.previousSemester = Semester().objects.create(Season=self.fall, year=2023)
+        self.semester = Semester.objects.create(Season=self.fall, year=self.currentYear)
+        self.diffSemester = Semester.objects.create(Season=self.fall, year=2028)
+        self.negSemester = Semester.objects.create(Season=self.fall, year=-2029)
+        self.previousSemester = Semester.objects.create(Season=self.fall, year=2023)
         self.math101 = Course.objects.create(courseName="Math 101", courseSemester=self.semester, courseID=123)
 
     def test_noInput(self):
@@ -54,7 +54,7 @@ class TestDeleteCourse(TestCase):
     def setUp(self):
         self.course = CourseClass()
         self.fall = Seasons.Fall
-        self.semester = Semester().objects.create(Season=self.fall, year=2024)
+        self.semester = Semester.objects.create(Season=self.fall, year=2024)
         self.math101 = Course.objects.create(courseName="Math 101", courseSemester=self.semester, courseID=123)
 
     def test_noInput(self):
@@ -73,7 +73,7 @@ class TestViewCourses(TestCase):
     def setUp(self):
         self.course = CourseClass()
         self.fall = Seasons.Fall
-        self.semester = Semester().objects.create(Season=self.fall, year=2024)
+        self.semester = Semester.objects.create(Season=self.fall, year=2024)
         self.math101 = Course.objects.create(courseName="Math 101", courseSemester=self.semester, courseID=123)
 
     def test_noInput(self):
@@ -92,7 +92,7 @@ class TestIsInDB(TestCase):
     def setUp(self):
         self.course = CourseClass()
         self.fall = Seasons.Fall
-        self.semester = Semester().objects.create(Season=self.fall, year=2024)
+        self.semester = Semester.objects.create(Season=self.fall, year=2024)
         self.math101 = Course.objects.create(courseName="Math 101", courseSemester=self.semester, courseID=123)
 
 

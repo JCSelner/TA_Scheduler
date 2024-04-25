@@ -8,7 +8,7 @@ class CourseClass:
 
         return len(coursesList) == 1
 
-    def createCourse(self, name="", currentYear=0, semester=Semester().objects.create(Season=Seasons.Fall, year=0), courseID=0, description=""):
+    def createCourse(self, name="", currentYear=0, semester=Semester.objects.create(season=Seasons.Fall, year=0), courseID=0, description=""):
         if (self.isInDB(courseID) or courseID == 0):
             return False
 
