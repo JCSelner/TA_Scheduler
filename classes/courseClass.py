@@ -1,4 +1,4 @@
-from project_app.models import Course
+from project_app.models import Course, Semester, Seasons
 
 
 class CourseClass:

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from datetime import datetime
-from project_app.models import User, Course, Assignment, Section, Roles
+from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons
 from classes.courseClass import CourseClass
 from random import randint
 
@@ -13,7 +13,7 @@ from random import randint
 class Courses(View):
     def get(self, request):
         courses = Course.objects.all()
-        return render(request, 'courses.html', {"courses": courses})
+        return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices})
 
     def post(self, request):
         courses = Course.objects.all()
@@ -23,7 +23,8 @@ class Courses(View):
 
 class CreateCourse(View):
     def get(self, request):
-        return render(request, 'createCourse.html')
+        semesters = Semester.objects.all()
+        return render(request, 'createCourse.html', {"semester": semesters})
 
     def post(self, request):
         courses = Course.objects.all()
