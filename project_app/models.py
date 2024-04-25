@@ -43,6 +43,7 @@ class Semester(models.Model):
     season = models.CharField(max_length=13, choices=Seasons.choices)
     year = models.IntegerField()
     semesterID = models.IntegerField()
+
     def __str__(self):
         return self.season + " " + self.year.__str__()
 
