@@ -13,6 +13,7 @@ class SectionTypes(models.TextChoices):
     Lecture = "Lecture"
     Lab = "Lab"
 
+
 class Seasons(models.TextChoices):
     Summer = "Summer"
     Winter = "Winter"
