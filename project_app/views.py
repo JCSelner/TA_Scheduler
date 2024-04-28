@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
-from datetime import datetime
 from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons
 from classes.courseClass import CourseClass
-from random import randint
+
 
 
 # Create your views here.
@@ -27,13 +26,13 @@ class CreateCourse(View):
         return render(request, 'createCourse.html', {"semester": semesters})
 
     def post(self, request):
+        currentYear = 2024
         courses = Course.objects.all()
         name = request.POST.get('Name')
         semester = request.POST.get('Semester')
         description = request.POST.get('Description')
-        CourseClass.createCourse(CourseClass, name, semester, len(courses) + 1, description)
+        CourseClass.createCourse(CourseClass, currentYear, name, semester, len(courses) + 1, description)
         courses = Course.objects.all()
-        print(courses)
         return redirect('courses')
 
 
