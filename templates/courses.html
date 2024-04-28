@@ -23,7 +23,12 @@
         <td>{{c.courseSemester}}</td>
         <td>{{c.courseDescription}}</td>
     </tr>
-
+    <select name="Season">
+    {% for i in seasons %}
+        <option >{{i}}</option>
+    {% endfor %}
+    <input name="Year" type="number"/>
+    </select>
     {% endfor %}
 
 </table>
