@@ -1,3 +1,4 @@
+
 from django.db import models
 
 
@@ -12,6 +13,7 @@ class Roles(models.TextChoices):
 class SectionTypes(models.TextChoices):
     Lecture = "Lecture"
     Lab = "Lab"
+
 
 class Seasons(models.TextChoices):
     Summer = "Summer"
@@ -43,6 +45,7 @@ class Semester(models.Model):
     season = models.CharField(max_length=13, choices=Seasons.choices)
     year = models.IntegerField()
     semesterID = models.IntegerField()
+
     def __str__(self):
         return self.season + " " + self.year.__str__()
 
