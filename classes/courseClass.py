@@ -8,7 +8,7 @@ class CourseClass:
 
         return len(coursesList) == 1
 
-    def createCourse(self, name="", semester=Semester(semesterID=0, season=Seasons.Fall, year=0), courseID=0, description=""):
+    def createCourse(self, name="", semester=Semester(), courseID=0, description=""):
         if (self.isInDB(courseID) or courseID == 0):
             return False
 
