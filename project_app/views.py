@@ -26,10 +26,20 @@ class Courses(View):
         season = request.POST['Season']
         if (year < currentYear):
             return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": "The year must be at least " + str(currentYear)})
+        if (len(Semester.objects.filter(year=year, season= season)) != 0):
+            return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": season + " " + year.__str__() + " is already in the database"})
+
         else:
             Semester.objects.create(year=year, season=season, semesterID=len(semesters)+1)
             return render(request, "courses.html", {"courses": courses, "seasons": Seasons.choices, "errorMessage": ""})
 
+class ExtendDeleteCourse(View):
+    def post(self, request):
+        courses = Course.objects.all()
+        course_id = request.POST.get('courseID')
+        courseID = int(course_id)
+        Course.objects.filter(courseID=courseID).delete()
+        return render(request, "courses.html", {"courses": courses, "seasons": Seasons.choices, "errorMessage": ""})
 
 class CreateCourse(View):
     def get(self, request):
@@ -40,9 +50,12 @@ class CreateCourse(View):
         currentYear = 2024
         courses = Course.objects.all()
         name = request.POST.get('Name')
-        semester = request.POST.get('Semester')
+        semesterName = request.POST.get('Semester')
+        semesterFields = semesterName.split(' ')
+        semester= Semester.objects.filter(year=int(semesterFields[1]), season=semesterFields[0])
+
         description = request.POST.get('Description')
-        if(CourseClass.createCourse(CourseClass, name, semester, len(courses) + 1, description)):
+        if(CourseClass.createCourse(CourseClass, name, semester[0], len(courses) + 1, description)):
             return redirect('courses')
         else:
             semesters = Semester.objects.all()
