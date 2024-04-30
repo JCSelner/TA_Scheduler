@@ -25,7 +25,7 @@ class Courses(View):
 
         season = request.POST['Season']
         if (year < currentYear):
-            return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": "The year must be at least 2024"})
+            return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": "The year must be at least " + str(currentYear) + "."})
         else:
             Semester.objects.create(year=year, season=season, semesterID=len(semesters)+1)
             return render(request, "courses.html", {"courses": courses, "seasons": Seasons.choices, "errorMessage": ""})
