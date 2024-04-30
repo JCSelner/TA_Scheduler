@@ -11,19 +11,24 @@ from classes.courseClass import CourseClass
 class Courses(View):
     def get(self, request):
         courses = Course.objects.all()
-        return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices})
+        return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": ""})
 
     def post(self, request):
         semesters = Semester.objects.all()
         currentYear = 2024
         courses = Course.objects.all()
-        year = int(request.POST['Year'])
+        try:
+            year = int(request.POST['Year'])
+        except(ValueError):
+            return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices,
+                                                    "errorMessage": "The year must not be blank"})
+
         season = request.POST['Season']
         if (year < currentYear):
-            return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": "The year is before the current year"})
+            return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": "The year must be at least 2024"})
         else:
             Semester.objects.create(year=year, season=season, semesterID=len(semesters)+1)
-            return render(request, "courses.html", {"courses": courses, "seasons": Seasons.choices})
+            return render(request, "courses.html", {"courses": courses, "seasons": Seasons.choices, "errorMessage": ""})
 
 
 class CreateCourse(View):

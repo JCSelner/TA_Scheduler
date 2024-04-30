@@ -30,26 +30,25 @@
             </form>
         </td>
     </tr>
-
-    <tr>
-        <th>Season</th>
-        <th>Year</th>
-    </tr>
-    <tr>
-        <td>
-            <select name="Season">
-        </td>
-        {% for i in seasons %}
-            <option >{{i}}</option>
-        {% endfor %}
-
-        <td>
-            <input name="Year" type="number"/>
-        </td>
-    </select>
     {% endfor %}
-    </tr>
+
 </table>
+
+Create New Semester
+<form action="/courses/" method="post">
+{% csrf_token %}
+    Season
+    <select name="Season">
+        {% for i in seasons %}
+            <option >{{i.1}}</option>
+        {% endfor %}
+     </select>
+        Year
+    <input name="Year" type="number"/>
+    <input type="submit"/>
+</form>
+{{ errorMessage }}
+
 
 <a href="/home/">Home</a>
 
