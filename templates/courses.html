@@ -22,13 +22,6 @@
         <td>{{c.courseName}}</td>
         <td>{{c.courseSemester}}</td>
         <td>{{c.courseDescription}}</td>
-        <td>
-            <form action="{% url 'extendDeleteUser' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="courseID" value="{{ c.courseID }}">
-                <button type="submit" class="button">Delete</button>
-            </form>
-        </td>
     </tr>
     {% endfor %}
 
