@@ -15,7 +15,7 @@ class CourseClass:
         coursesList = Course.objects.filter(courseName=name, courseSemester=semester)
         if (len(coursesList) != 0):
             return False
-        if(semester.year < 0):
+        if(semester == None or semester.year < 0):
             return False
 
         Course.objects.create(courseName= name, courseSemester=semester, courseID=courseID, courseDescription=description)

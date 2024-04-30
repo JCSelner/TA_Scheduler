@@ -30,14 +30,25 @@
             </form>
         </td>
     </tr>
-    <select name="Season">
-    {% for i in seasons %}
-        <option >{{i}}</option>
-    {% endfor %}
-    <input name="Year" type="number"/>
+
+    <tr>
+        <th>Season</th>
+        <th>Year</th>
+    </tr>
+    <tr>
+        <td>
+            <select name="Season">
+        </td>
+        {% for i in seasons %}
+            <option >{{i}}</option>
+        {% endfor %}
+
+        <td>
+            <input name="Year" type="number"/>
+        </td>
     </select>
     {% endfor %}
-
+    </tr>
 </table>
 
 <a href="/home/">Home</a>

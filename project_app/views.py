@@ -5,7 +5,6 @@ from project_app.models import User, Course, Assignment, Section, Roles, Semeste
 from classes.courseClass import CourseClass
 
 
-
 # Create your views here.
 
 
@@ -30,7 +29,7 @@ class Courses(View):
 class CreateCourse(View):
     def get(self, request):
         semesters = Semester.objects.all()
-        return render(request, 'createCourse.html', {"semester": semesters})
+        return render(request, 'createCourse.html', {"semester": semesters, "errorMessage": ""})
 
     def post(self, request):
         currentYear = 2024
@@ -38,9 +37,11 @@ class CreateCourse(View):
         name = request.POST.get('Name')
         semester = request.POST.get('Semester')
         description = request.POST.get('Description')
-        CourseClass.createCourse(CourseClass, currentYear, name, semester, len(courses) + 1, description)
-        courses = Course.objects.all()
-        return redirect('courses')
+        if(CourseClass.createCourse(CourseClass, name, semester, len(courses) + 1, description)):
+            return redirect('courses')
+        else:
+            semesters = Semester.objects.all()
+            return render(request, 'createCourse.html', {"semester": semesters, "errorMessage": "The course is invalid"})
 
 
 class Login(View):
