@@ -1,5 +1,6 @@
 from project_app.models import User
 
+
 class Account(object):
     def __init__(self, userID='admin', password='admin', email=None, phone=0, firstName='first',
                  lastName='last', role='TA', address=None):
@@ -12,53 +13,20 @@ class Account(object):
         self.role = role
         self.address = address
 
-    def createUser(self, other):
-        self.userID = other.userID
-        self.password = other.password
-        self.email = other.email
-        self.phone = other.phone
-        self.firstName = other.firstName
-        self.lastName = other.lastName
-        self.role = other.role
-        self.address = other.address
-
-    def deleteUser(self):
-        self.userID = 'admin'
-        self.password = 'admin'
-        self.email = None
-        self.phone = 0
-        self.firstName = 'first'
-        self.lastName = 'last'
-        self.role = 'TA'
-        self.address = None
-
-    def editUserPassword(self, other):
-        self.password = other
-
-    def editUserID(self, other):
-        self.userID = other
-
-    def editUserEmail(self, other):
-        self.email = other
-
-    def editUserPhoneNumber(self, other):
-        self.phone = other
-
-    def editUserAddress(self, other):
-        self.address = other
-
-    def editUserFirstName(self, other):
-        self.firstName = other
-
-    def editUserLastName(self, other):
-        self.lastName = other
-
-    def editUserRole(self, other):
-        self.role = other
-
     def save_details(self):
         account = User.objects.create(userID=self.userID, password=self.password,
-                                      email=self.email,phone=self.phone,firstName=self.firstName,
-                                      lastName=self.lastName,role=self.role,address=self.address)
-        return f"{account.firstName, account.lastName} with ID {account.userID} saved to the db"
+                                      email=self.email, phone=self.phone, firstName=self.firstName,
+                                      lastName=self.lastName, role=self.role, address=self.address)
+        return f"{account.firstName} {account.lastName} with ID {account.userID} saved to the db"
 
+    def delete_user(self):
+        # Reset attributes to default values
+        self.__init__()
+
+    def edit_user(self, **kwargs):
+        # goes through each passed in attribute and edits them through the for loop
+        for key, value in kwargs.items():
+            try:
+                setattr(self, key, value)
+            except AttributeError:
+                raise AttributeError
