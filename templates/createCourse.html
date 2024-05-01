@@ -12,10 +12,9 @@
     Name:
     <input name="Name" type="text"/>
     Semester:
-    <input name="Semester" type="text"/>
     <select name="Semester">
-    {% for i in semesters %}
-        <option value="{{ i.1 }}">{{ i.0 }}</option>
+    {% for i in semester %}
+        <option >{{i}}</option>
     {% endfor %}
     </select>
     Description:
