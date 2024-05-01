@@ -22,16 +22,33 @@
         <td>{{c.courseName}}</td>
         <td>{{c.courseSemester}}</td>
         <td>{{c.courseDescription}}</td>
+        <td>
+            <form action="{% url 'extendDeleteCourse' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="courseID" value="{{ c.courseID }}">
+                <button type="submit" class="button">Delete</button>
+            </form>
+        </td>
     </tr>
-    <select name="Season">
-    {% for i in seasons %}
-        <option >{{i}}</option>
-    {% endfor %}
-    <input name="Year" type="number"/>
-    </select>
     {% endfor %}
 
 </table>
+
+Create New Semester
+<form action="/courses/" method="post">
+{% csrf_token %}
+    Season
+    <select name="Season">
+        {% for i in seasons %}
+            <option >{{i.1}}</option>
+        {% endfor %}
+     </select>
+        Year
+    <input name="Year" type="number"/>
+    <input type="submit"/>
+</form>
+{{ errorMessage }}
+
 
 <a href="/home/">Home</a>
 

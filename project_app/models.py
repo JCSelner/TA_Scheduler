@@ -42,9 +42,9 @@ class User(models.Model):
 
 
 class Semester(models.Model):
-    season = models.CharField(max_length=13, choices=Seasons.choices)
-    year = models.IntegerField()
-    semesterID = models.IntegerField()
+    season = models.CharField(max_length=13, choices=Seasons.choices, default=Seasons.Fall)
+    year = models.IntegerField(default=0)
+    semesterID = models.IntegerField(default=0)
 
     def __str__(self):
         return self.season + " " + self.year.__str__()
