@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import logout
 from django.views import View
-from django.contrib.auth import authenticate, login, logout
 from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons
 from classes.courseClass import CourseClass
-
 
 
 # Create your views here.
@@ -21,9 +20,10 @@ class Courses(View):
         year = int(request.POST['Year'])
         season = request.POST['Season']
         if (year < currentYear):
-            return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": "The year is before the current year"})
+            return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices,
+                                                    "errorMessage": "The year is before the current year"})
         else:
-            Semester.objects.create(year=year, season=season, semesterID=len(semesters)+1)
+            Semester.objects.create(year=year, season=season, semesterID=len(semesters) + 1)
             return render(request, "courses.html", {"courses": courses, "seasons": Seasons.choices})
 
 
@@ -44,45 +44,74 @@ class CreateCourse(View):
 
 
 class Login(View):
+    # Handle the HTTP GET request by rendering the 'login.html' file.
     def get(self, request):
         return render(request, 'login.html')
 
+    # Handle the HTTP POST request by managing the data submitted by the 'login.html' file.
     def post(self, request):
-        username = request.POST.get('userID')
-        password = request.POST.get('password')
+        # Extract the data from the submitted form.
+        username = request.POST["userID"]
+        password = request.POST["password"]
 
+        # Query the database and check if the user exists in the database.
+        # We check by calling the 'exists()' function on the filtered Object call.
         if User.objects.filter(userID=username, password=password).exists():
+            # If the user exists in the database,
+            # Store the name of the user in the session data associated with the current request.
+            request.session['userID'] = request.POST["userID"]
+            # Redirect the user towards the homepage.
             return redirect('home')
         else:
+            # Otherwise, render the 'login.html' page, displaying an error message.
             error_message = "Invalid username or password."
             return render(request, 'login.html', {'error_message': error_message})
 
 
 class Home(View):
+    # Upon a successful redirect, from 'login.html' to 'home.html'
+    # Handle the HTTP GET request, by simply rendering the 'home.html' page.
     def get(self, request):
-        return render(request, 'home.html')
-
-    def post(self, request):
-        pass
+        try:
+            # Carry along the session of the current user to the 'home.html' page.
+            # The try-except block will handle the 'KeyError' exception,
+            # Which raises if there's no existing session with the given 'userID' key.
+            s = request.session['userID']
+        except KeyError:
+            # If the KeyError exception is caught, simply redirect to the 'login.html' page.
+            return redirect('login')
+        return render(request, 'home.html', {'user_session': s})
 
 
 class Logout(View):
     def get(self, request):
-        logout(request)
+        # Upon a successful logout request, remove the specific user from the session via the provided key.
+        # If the provided key, does not exist, simply return 'None'.
+        request.session.pop('userID', None)
+        # Finally, redirect the user back to the 'login.html' page.
         return redirect('login')
 
 
 class ManageUser(View):
     def get(self, request):
-        return render(request, 'account.html')
-
-    def post(self, request):
-        pass
+        try:
+            # Carry along the session of the current user to the 'account.html' page.
+            s = request.session['userID']
+        except KeyError:
+            # Handle 'KeyError' exceptions appropriately
+            return redirect('login')
+        return render(request, 'account.html', {'user_session': s})
 
 
 class CreateUser(View):
     def get(self, request):
-        return render(request, 'createUser.html', {'roles': Roles.choices})
+        try:
+            # Carry along the session of the current user to the 'createUser.html' page.
+            s = request.session['userID']
+        except KeyError:
+            # Handle 'KeyError' exceptions appropriately
+            return redirect('login')
+        return render(request, 'createUser.html', {'roles': Roles.choices, 'user_session': s})
 
     def post(self, request):
         username = request.POST['userID']
@@ -107,10 +136,19 @@ class CreateUser(View):
 
 class DeleteUser(View):
     def get(self, request):
+        try:
+            # Carry along the session of the current user to the 'deleteUser.html' page.
+            s = request.session['userID']
+        except KeyError:
+            # Handle 'KeyError' exceptions appropriately
+            return redirect('login')
         users = User.objects.filter().all()
         return render(request, 'deleteUser.html',
-                      {'roles': Roles.choices,
-                       'users': users})
+                      {
+                          'roles': Roles.choices,
+                          'users': users,
+                          'user_session': s
+                      })
 
     def post(self, request):
         # query (filter) for users
