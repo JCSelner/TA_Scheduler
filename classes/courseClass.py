@@ -3,6 +3,12 @@ from project_app.models import Course, Semester, Seasons
 
 class CourseClass:
 
+    def __init__(self, courseName="", description="", courseID=0, semester=Semester()):
+        self.courseName = courseName
+        self.description = description
+        self.courseID = courseID
+        self.semester = semester
+
     def isInDB(self, courseID = 0):
         coursesList = Course.objects.filter(courseID=courseID)
 
