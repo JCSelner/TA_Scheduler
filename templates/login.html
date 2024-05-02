@@ -11,14 +11,9 @@
 <hr/>
 <h2 class="center">Login</h2>
 <div class="container">
+    <!-- The 'action' tag specifies the desired URL that will process the data given from this form submission -->
     <form action="{% url 'login' %}" method="post" class="form">
         {% csrf_token %}
-        <!--
-        These labels are for visual purposes only.
-        As the project progresses, the approach is to replace
-        these fields with the character fields found in the models.
-        -->
-
         <label for="username">Username:</label>
         &nbsp;<input name="userID" type="text" id="username"><br><br>
         <label for="password">Password:</label>
