@@ -12,15 +12,17 @@
     Name:
     <input name="Name" type="text"/>
     Semester:
-    <select name="Semester">
+    <select name="Semester" >
     {% for i in semester %}
-        <option >{{i}}</option>
+        <option>{{i}}</option>
     {% endfor %}
     </select>
     Description:
     <input name="Description" type="text"/>
     <input type="submit"/>
+
 </form>
+<h1>{{errorMessage}}</h1>
 <br/><a href="/courses/">Courses</a>
 </body>
 </html>
