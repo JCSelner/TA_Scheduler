@@ -15,11 +15,10 @@ class CourseClass:
         return len(coursesList) == 1
 
     def createCourse(self, name="", semester=Semester(), courseID=0, description=""):
-        if (self.isInDB(courseID) or courseID == 0):
+        if(self.isInDB(courseID) or courseID == 0):
             return False
 
-        coursesList = Course.objects.filter(courseName=name, courseSemester=semester)
-        if (len(coursesList) != 0):
+        if(Course.objects.filter(courseName=name, courseSemester=semester).exists()):
             return False
         if(semester == None or semester.year < 0):
             return False
