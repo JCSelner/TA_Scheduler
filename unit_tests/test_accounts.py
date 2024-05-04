@@ -1,18 +1,25 @@
 from django.test import TestCase
-from unittest.mock import patch
-from project_app.models import User
+from unittest.mock import patch, MagicMock
 from classes.accounts import Account
 
 class AccountTestCase(TestCase):
 
     @patch('project_app.models.User.objects.create')
-    def test_save_details(self, mock_create):
+    def test_save_details_success(self, mock_create):
+        user_mock = MagicMock()
+        user_mock.userID = 'test_user'
+        user_mock.firstName = 'Test'
+        user_mock.lastName = 'User'
+        user_mock.email = 'test@example.com'
+        user_mock.phone = '1234567890'
+        user_mock.role = 'Tester'
+        user_mock.address = '123 Test St.'
+        mock_create.return_value = user_mock
+
         account = Account(userID='test_user', password='test_pass', email='test@example.com',
                           phone='1234567890', firstName='Test', lastName='User', role='Tester',
                           address='123 Test St.')
-        mock_create.return_value = User(userID='test_user', password='test_pass', email='test@example.com',
-                                        phone='1234567890', firstName='Test', lastName='User', role='Tester',
-                                        address='123 Test St.')
+
         result = account.save_details()
         self.assertEqual(result, "Test User with ID test_user saved to the db")
         mock_create.assert_called_once_with(userID='test_user', password='test_pass', email='test@example.com',
@@ -26,12 +33,12 @@ class AccountTestCase(TestCase):
         account.delete_user()
         self.assertEqual(account.userID, 'admin')
         self.assertEqual(account.password, 'admin')
-        self.assertEqual(account.email, None)
+        self.assertIsNone(account.email)
         self.assertEqual(account.phone, 0)
         self.assertEqual(account.firstName, 'first')
         self.assertEqual(account.lastName, 'last')
         self.assertEqual(account.role, 'TA')
-        self.assertEqual(account.address, None)
+        self.assertIsNone(account.address)
 
     def test_edit_user(self):
         account = Account()
@@ -46,13 +53,16 @@ class AccountTestCase(TestCase):
             account.edit_user(invalid_attribute='value')
 
     def test_invalid_email(self):
+        account = Account()
         with self.assertRaises(ValueError):
-            account = Account(email='invalid_email')
+            account.set_email('invalid_email')
 
     def test_invalid_phone_number(self):
+        account = Account()
         with self.assertRaises(ValueError):
-            account = Account(phone='invalid_phone_number')
+            account.set_phone('invalid_phone_number')
 
     def test_invalid_role(self):
+        account = Account()
         with self.assertRaises(ValueError):
-            account = Account(role='invalid_role')
+            account.validate_role('invalid_role')

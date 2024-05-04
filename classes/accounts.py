@@ -1,6 +1,5 @@
 from project_app.models import User
 
-
 class Account(object):
     def __init__(self, userID='admin', password='admin', email=None, phone=0, firstName='first',
                  lastName='last', role='TA', address=None):
@@ -20,13 +19,47 @@ class Account(object):
         return f"{account.firstName} {account.lastName} with ID {account.userID} saved to the db"
 
     def delete_user(self):
-        # Reset attributes to default values
-        self.__init__()
+        self.userID = 'admin'
+        self.password = 'admin'
+        self.email = None
+        self.phone = 0
+        self.firstName = 'first'
+        self.lastName = 'last'
+        self.role = 'TA'
+        self.address = None
 
     def edit_user(self, **kwargs):
-        # goes through each passed in attribute and edits them through the for loop
         for key, value in kwargs.items():
-            try:
-                setattr(self, key, value)
-            except AttributeError:
-                raise AttributeError
+            if hasattr(self, key):
+                if key == 'email':
+                    self.set_email(value)
+                elif key == 'phone':
+                    self.set_phone(value)
+                elif key == 'role':
+                    self.validate_role(value)
+                    setattr(self, key, value)
+                else:
+                    setattr(self, key, value)
+            else:
+                raise AttributeError(f"Attribute '{key}' does not exist in Account")
+
+    def set_email(self, email):
+        self.validate_email(email)
+        self.email = email
+
+    def set_phone(self, phone):
+        self.validate_phone(phone)
+        self.phone = phone
+
+    def validate_email(self, email):
+        if '@' not in email or '.' not in email:
+            raise ValueError("Invalid email format")
+
+    def validate_phone(self, phone):
+        if not phone.isdigit():
+            raise ValueError("Phone number must contain only digits")
+
+    def validate_role(self, role):
+        VALID_ROLES = ['Admin', 'Supervisor', 'Tester', 'TA']
+        if role not in VALID_ROLES:
+            raise ValueError("Invalid role")
