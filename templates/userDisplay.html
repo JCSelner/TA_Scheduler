@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>User Information</h1>
+    <h2>Username: {{ user.userID }}</h2>
+    <h2>First Name: {{ user.firstName }}</h2>
+    <h2>Last Name: {{ user.lastName }}</h2>
+    <h2>Email: {{ user.email }}</h2>
+    <h2>Phone Number: {{ user.phone }}</h2>
+    <h2>Address: {{ user.address }}</h2>
+    <h2>Assigned Courses: </h2>
+    <table>
+        {% csrf_token %}
+        <tr>
+            <th>Name</th>
+            <th>Semester</th>
+            <th>Description</th>
+        </tr>
+        {% for a in assignments %}
+        <tr>
+            <td>{{a.courseID.courseName}}</td>
+            <td>{{a.courseID.courseSemester}}</td>
+            <td>{{a.courseID.courseDescription}}</td>
+        </tr>
+        {% endfor %}
+
+
+    </table>
+
+    <h2>Assigned Sections: </h2>
+    <table>
+        {% csrf_token %}
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Course</th>
+        </tr>
+        {% for s in sections %}
+        <tr>
+            <td>{{s.sectionID}}</td>
+            <td>{{s.type}}</td>
+            <td>{{s.courseID.courseName}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="/deleteUser/">Return to users</a>
+</body>
+</html>

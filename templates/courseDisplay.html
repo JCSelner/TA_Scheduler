@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Course Information</h1>
+    <h2>Course Name: {{ course.courseName }}</h2>
+    <h2>Course Description: {{ course.courseDescription}}</h2>
+    <h2>Sections: </h2>
+    <table>
+        {% csrf_token %}
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>TA</th>
+        </tr>
+        {% for s in sections %}
+        <tr>
+            <td>{{s.sectionID}}</td>
+            <td>{{s.type}}</td>
+            <td>{{s.taID.userID}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Assigned Users: </h2>
+    <table>
+        {% csrf_token %}
+        <tr>
+            <th>User Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Role</th>
+        </tr>
+        {% for a in assignments %}
+        <tr>
+            <td>{{a.userID.userID}}</td>
+            <td>{{a.userID.firstName}}</td>
+            <td>{{a.userID.lastName}}</td>
+            <td>{{a.userID.role}}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+    <a href="/courses/">Return to courses</a>
+</body>
+</html>
