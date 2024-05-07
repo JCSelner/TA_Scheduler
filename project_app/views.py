@@ -7,11 +7,17 @@ from classes.courseClass import CourseClass
 
 # Create your views here.
 
+class ManageCourse(View):
+    def get(self, request):
+        return render(request, 'manageCourses.html')
+
+    def post(self, request):
+        pass
 
 class Courses(View):
     def get(self, request):
         courses = Course.objects.all()
-        return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": ""})
+        return render(request, 'viewCourses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": ""})
 
     def post(self, request):
         semesters = Semester.objects.all()
@@ -20,18 +26,18 @@ class Courses(View):
         try:
             year = int(request.POST['Year'])
         except(ValueError):
-            return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices,
+            return render(request, 'viewCourses.html', {"courses": courses, "seasons": Seasons.choices,
                                                     "errorMessage": "The year must not be blank"})
 
         season = request.POST['Season']
         if (year < currentYear):
-            return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": "The year must be at least " + str(currentYear)})
+            return render(request, 'viewCourses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": "The year must be at least " + str(currentYear)})
         if (len(Semester.objects.filter(year=year, season= season)) != 0):
-            return render(request, 'courses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": season + " " + year.__str__() + " is already in the database"})
+            return render(request, 'viewCourses.html', {"courses": courses, "seasons": Seasons.choices, "errorMessage": season + " " + year.__str__() + " is already in the database"})
 
         else:
             Semester.objects.create(year=year, season=season, semesterID=len(semesters)+1)
-            return render(request, "courses.html", {"courses": courses, "seasons": Seasons.choices, "errorMessage": ""})
+            return render(request, "viewCourses.html", {"courses": courses, "seasons": Seasons.choices, "errorMessage": ""})
 
 class ExtendDeleteCourse(View):
     def post(self, request):
@@ -39,7 +45,7 @@ class ExtendDeleteCourse(View):
         course_id = request.POST.get('courseID')
         courseID = int(course_id)
         Course.objects.filter(courseID=courseID).delete()
-        return render(request, "courses.html", {"courses": courses, "seasons": Seasons.choices, "errorMessage": ""})
+        return render(request, "viewCourses.html", {"courses": courses, "seasons": Seasons.choices, "errorMessage": ""})
 
 class CreateCourse(View):
     def get(self, request):
