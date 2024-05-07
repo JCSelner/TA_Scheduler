@@ -76,7 +76,10 @@ class ManageCourse(View):
             except KeyError:
                 # Handle 'KeyError' exceptions appropriately
                 return redirect('login')
-            return render(request, 'manageCourses.html', {'user_session': s})
+            return render(request, 'manageCourses.html',
+                          {
+                                'user_session': s
+                          })
 
 
 class CreateCourse(View):
@@ -130,7 +133,10 @@ class Login(View):
         else:
             # Otherwise, render the 'login.html' page, displaying an error message.
             error_message = "Invalid username or password."
-            return render(request, 'login.html', {'error_message': error_message})
+            return render(request, 'login.html',
+                          {
+                                'error_message': error_message
+                          })
 
 
 class Home(View):
@@ -145,7 +151,10 @@ class Home(View):
         except KeyError:
             # If the KeyError exception is caught, simply redirect to the 'login.html' page.
             return redirect('login')
-        return render(request, 'home.html', {'user_session': s})
+        return render(request, 'home.html',
+                      {
+                            'user_session': s
+                      })
 
 
 class Logout(View):
@@ -165,7 +174,10 @@ class ManageUser(View):
         except KeyError:
             # Handle 'KeyError' exceptions appropriately
             return redirect('login')
-        return render(request, 'account.html', {'user_session': s})
+        return render(request, 'account.html',
+                      {
+                            'user_session': s
+                      })
 
 
 class CreateUser(View):
@@ -200,7 +212,10 @@ class CreateUser(View):
                             role=role,
                             firstName=first_name,
                             lastName=last_name)
-        return render(request, 'createUser.html', {'roles': Roles.choices})
+        return render(request, 'createUser.html',
+                      {
+                          'roles': Roles.choices
+                      })
 
 
 class DeleteUser(View):
@@ -246,7 +261,12 @@ class ExtendDeleteUsers(View):
             user = User.objects.get(userID=request.POST.get('userID'))
             assignments = Assignment.objects.filter(userID=user)
             sections = Section.objects.filter(userID=user)
-            return render(request, 'userDisplay.html', {'user': user, 'assignments': assignments, 'sections': sections})
+            return render(request, 'userDisplay.html',
+                          {
+                              'user': user,
+                              'assignments': assignments,
+                              'sections': sections
+                          })
 
     class courseDisplay(View):
         def get(self, request):
@@ -254,5 +274,9 @@ class ExtendDeleteUsers(View):
             assignments = Assignment.objects.filter(courseID=course)
             sections = Section.objects.filter(courseID=course)
             return render(request, 'courseDisplay.html',
-                          {'course': course, 'assignments': assignments, 'sections': sections})
+                          {
+                              'course': course,
+                              'assignments': assignments,
+                              'sections': sections
+                          })
 
