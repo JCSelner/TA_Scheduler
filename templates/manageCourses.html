@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/manage_user_style.css' %}">
+    <title>Manage User</title>
+</head>
+<body>
+<h1 class="center header" style="color: black">Manage User</h1>
+<!-- user's options -->
+<div class="container center">
+    <h2>Navigation</h2>
+    <ul>
+        <li><a href='{% url 'createCourse' %}'>Create New Course</a></li>
+        <li><a href="{% url 'deleteCourse' %}">View Course(s)</a></li>
+        <li><a href="{% url 'home' %}">Back to Homepage</a></li>
+    </ul>
+</div>
+</body>
+</html>
