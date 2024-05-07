@@ -3,17 +3,22 @@ from project_app.models import Course, Semester, Seasons
 
 class CourseClass:
 
+    def __init__(self, courseName="", description="", courseID=0, semester=Semester()):
+        self.courseName = courseName
+        self.description = description
+        self.courseID = courseID
+        self.semester = semester
+
     def isInDB(self, courseID = 0):
         coursesList = Course.objects.filter(courseID=courseID)
 
         return len(coursesList) == 1
 
     def createCourse(self, name="", semester=Semester(), courseID=0, description=""):
-        if (self.isInDB(courseID) or courseID == 0):
+        if(self.isInDB(courseID) or courseID == 0):
             return False
 
-        coursesList = Course.objects.filter(courseName=name, courseSemester=semester)
-        if (len(coursesList) != 0):
+        if(Course.objects.filter(courseName=name, courseSemester=semester).exists()):
             return False
         if(semester == None or semester.year < 0):
             return False

@@ -29,7 +29,7 @@ urlpatterns = [
     path('deleteUser/', DeleteUser.as_view(), name='deleteUser'),
     path('deletedUser/', ExtendDeleteUsers.as_view(), name='extendDeleteUser'),
     path('courses/', Courses.as_view(), name='courses'),
-    path('deleteCourse/',ExtendDeleteCourse.as_view(), name='extendDeleteCourse'),
-    path('home/logout/', Logout.as_view(), name='logout'),
+    path('deleteCourse/', ExtendDeleteCourse.as_view(), name='extendDeleteCourse'),
+    path('logout/', Logout.as_view(), name='logout'),
     path('createCourse/', CreateCourse.as_view(), name='createCourse'),
 ]
