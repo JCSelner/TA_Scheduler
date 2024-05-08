@@ -1,6 +1,9 @@
 from django.test import TestCase
 from unittest.mock import patch, MagicMock
 from classes.accounts import Account
+from django.urls import reverse
+from django.test import Client
+from project_app.models import User
 
 class AccountTestCase(TestCase):
 
@@ -41,16 +44,13 @@ class AccountTestCase(TestCase):
         self.assertIsNone(account.address)
 
     def test_edit_user(self):
-        account = Account()
-        account.edit_user(firstName='New', lastName='User', email='new@example.com')
-        self.assertEqual(account.firstName, 'New')
-        self.assertEqual(account.lastName, 'User')
-        self.assertEqual(account.email, 'new@example.com')
-
-    def test_edit_user_invalid_attribute(self):
-        account = Account()
-        with self.assertRaises(AttributeError):
-            account.edit_user(invalid_attribute='value')
+        # Assuming edit_user.html is accessible at '/editUser/<pk>/'
+        user = User.objects.create(userID='test_user', password='test_pass', email='test@example.com',
+                                    phone='1234567890', firstName='Test', lastName='User', role='Tester',
+                                    address='123 Test St.')
+        client = Client()
+        response = client.get(reverse('editUser', kwargs={'pk': user.pk}))
+        self.assertEqual(response.status_code, 200)
 
     def test_invalid_email(self):
         account = Account()
@@ -66,3 +66,29 @@ class AccountTestCase(TestCase):
         account = Account()
         with self.assertRaises(ValueError):
             account.validate_role('invalid_role')
+
+    def test_edit_user_invalid_attribute(self):
+        account = Account()
+        with self.assertRaises(AttributeError):
+            account.edit_user(invalid_attribute='value')
+
+    def test_edit_user_form_submission(self):
+        user = User.objects.create(userID='test_user', password='test_pass', email='test@example.com',
+                                    phone='1234567890', firstName='Test', lastName='User', role='Tester',
+                                    address='123 Test St.')
+        client = Client()
+        response = client.post(reverse('editUser', kwargs={'pk': user.pk}), {
+            'email': 'new_email@example.com',
+            'phone': '9876543210',
+            'role': 'NewRole',
+            'address': '456 New St.'
+        })
+        updated_user = User.objects.get(pk=user.pk)
+        self.assertEqual(updated_user.email, 'new_email@example.com')
+        self.assertEqual(updated_user.phone, '9876543210')
+        self.assertEqual(updated_user.role, 'NewRole')
+        self.assertEqual(updated_user.address, '456 New St.')
+
+
+
+
