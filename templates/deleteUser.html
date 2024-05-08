@@ -36,6 +36,11 @@
                         <button type="submit" class="button">Edit</button>
                     </form>
                 </td>
+                <td>
+                    <form action="{% url 'userDisplayDisplay' pk=i.userID %}" method="get">
+                        <button type="submit" class="pageButton">View Page</button>
+                    </form>
+                </td>
             </tr>
         {% endfor %}
     </table>

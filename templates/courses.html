@@ -33,7 +33,6 @@
         </td>
         <td>
             <form action="{% url 'courseDisplay' pk=c.courseID %}" method="get">
-                {% csrf_token %}
                 <button type="submit" class="pageButton">View Page</button>
             </form>
         </td>
