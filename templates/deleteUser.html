@@ -32,6 +32,9 @@
                         <input type="hidden" name="userID" value="{{ i.userID }}">
                         <button type="submit" class="button">Delete</button>
                     </form>
+                    <form action="{% url 'editUser' pk=i.pk %}" method="get">
+                        <button type="submit" class="button">Edit</button>
+                    </form>
                 </td>
             </tr>
         {% endfor %}
