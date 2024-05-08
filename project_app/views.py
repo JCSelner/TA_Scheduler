@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons
 from classes.courseClass import CourseClass
+from django.http import HttpResponse
 
 
 # Create your views here.
@@ -228,3 +229,17 @@ class ExtendDeleteUsers(View):
                           'roles': Roles.choices,
                           'users': users
                       })
+
+class EditUser(View):
+    def get(self, request, pk):
+        user = User.objects.get(pk=pk)
+        return render(request, 'editUser.html', {'user': user})
+
+    def post(self, request, pk):
+        user = User.objects.get(pk=pk)
+        user.email = request.POST.get('email')
+        user.phone = request.POST.get('phone')
+        user.role = request.POST.get('role')
+        user.address = request.POST.get('address')
+        user.save()
+        return HttpResponse('User updated successfully')

@@ -44,8 +44,10 @@ class Account(object):
                 raise AttributeError(f"Attribute '{key}' does not exist in Account")
 
     def set_email(self, email):
-        self.validate_email(email)
-        self.email = email
+        if self.validate_email(email) != ValueError:
+            self.email = email
+        else:
+            raise ValueError
 
     def set_phone(self, phone):
         self.validate_phone(phone)

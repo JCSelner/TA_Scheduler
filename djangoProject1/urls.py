@@ -18,7 +18,8 @@ from django.contrib import admin
 from django.urls import path
 
 from project_app.views import (Courses, Login, Logout, Home, CreateCourse, ManageUser, CreateUser, DeleteUser,
-                               ExtendDeleteUsers, ExtendDeleteCourse)
+                               ExtendDeleteUsers, ExtendDeleteCourse, EditUser)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,4 +33,6 @@ urlpatterns = [
     path('deleteCourse/', ExtendDeleteCourse.as_view(), name='extendDeleteCourse'),
     path('logout/', Logout.as_view(), name='logout'),
     path('createCourse/', CreateCourse.as_view(), name='createCourse'),
+    path('editUser/<int:pk>/', EditUser.as_view(), name='editUser'),
+
 ]
