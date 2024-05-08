@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/delete_user_style.css' %}">
     <title>Courses</title>
 </head>
 <body>
 
-<h1>Courses</h1>
+<h1 class = "header">Courses</h1>
 <a href="/createCourse/">Create new course</a>
-<table>
+<table id="user_table">
     {% csrf_token %}
 
     <tr>
         <th>Name</th>
         <th>Semester</th>
-        <th>description</th>
+        <th>Description</th>
+        <th>Action</th>
     </tr>
     {% for c in courses %}
     <tr>
@@ -50,7 +52,7 @@ Create New Semester
 {{ errorMessage }}
 
 
-<a href="/home/">Home</a>
+<a href="/manageCourse/">Manage Courses</a>
 
 </body>
 </html>
