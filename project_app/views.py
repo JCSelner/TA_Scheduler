@@ -68,6 +68,21 @@ class ExtendDeleteCourse(View):
                       })
 
 
+class ManageCourse(View):
+    class ManageUser(View):
+        def get(self, request):
+            try:
+                # Carry along the session of the current user to the 'account.html' page.
+                s = request.session['userID']
+            except KeyError:
+                # Handle 'KeyError' exceptions appropriately
+                return redirect('login')
+            return render(request, 'manageCourses.html',
+                          {
+                                'user_session': s
+                          })
+
+
 class CreateCourse(View):
     def get(self, request):
         semesters = Semester.objects.all()
@@ -108,18 +123,25 @@ class Login(View):
         username = request.POST["userID"]
         password = request.POST["password"]
 
-        # Query the database and check if the user exists in the database.
-        # We check by calling the 'exists()' function on the filtered Object call.
         if User.objects.filter(userID=username, password=password).exists():
-            # If the user exists in the database,
             # Store the name of the user in the session data associated with the current request.
             request.session['userID'] = request.POST["userID"]
-            # Redirect the user towards the homepage.
-            return redirect('home')
+            # Determine the role of the user based on their 'username' and 'password'.
+            user_role = User.objects.filter(userID=username, password=password).values('role')
+            # Verify their role and redirect to appropriate homepage.
+            for role in user_role:
+                if role['role'] == 'Admin':
+                    return redirect('home')
+                elif role['role'] == 'Instructor':
+                    return redirect('instructor_home')
+                elif role['role'] == 'TA':
+                    return redirect('teaching_assistant_home')
         else:
-            # Otherwise, render the 'login.html' page, displaying an error message.
             error_message = "Invalid username or password."
-            return render(request, 'login.html', {'error_message': error_message})
+            return render(request, 'login.html',
+                          {
+                                'error_message': error_message
+                          })
 
 
 class Home(View):
@@ -127,14 +149,31 @@ class Home(View):
     # Handle the HTTP GET request, by simply rendering the 'home.html' page.
     def get(self, request):
         try:
-            # Carry along the session of the current user to the 'home.html' page.
-            # The try-except block will handle the 'KeyError' exception,
-            # Which raises if there's no existing session with the given 'userID' key.
             s = request.session['userID']
         except KeyError:
-            # If the KeyError exception is caught, simply redirect to the 'login.html' page.
             return redirect('login')
-        return render(request, 'home.html', {'user_session': s})
+        return render(request, 'home.html',
+                      {
+                            'user_session': s
+                      })
+
+
+class InstructorHome(View):
+    def get(self, request):
+        try:
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
+        return render(request, 'instructor_home.html', {'user_session': s})
+
+
+class TeachingAssistantHome(View):
+    def get(self, request):
+        try:
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
+        return render(request, 'teaching_assistant_home.html', {'user_session': s})
 
 
 class Logout(View):
@@ -152,9 +191,11 @@ class ManageUser(View):
             # Carry along the session of the current user to the 'account.html' page.
             s = request.session['userID']
         except KeyError:
-            # Handle 'KeyError' exceptions appropriately
             return redirect('login')
-        return render(request, 'account.html', {'user_session': s})
+        return render(request, 'account.html',
+                      {
+                            'user_session': s
+                      })
 
 
 class CreateUser(View):
@@ -163,7 +204,6 @@ class CreateUser(View):
             # Carry along the session of the current user to the 'createUser.html' page.
             s = request.session['userID']
         except KeyError:
-            # Handle 'KeyError' exceptions appropriately
             return redirect('login')
         return render(request, 'createUser.html',
                       {
@@ -189,7 +229,10 @@ class CreateUser(View):
                             role=role,
                             firstName=first_name,
                             lastName=last_name)
-        return render(request, 'createUser.html', {'roles': Roles.choices})
+        return render(request, 'createUser.html',
+                      {
+                          'roles': Roles.choices
+                      })
 
 
 class DeleteUser(View):
@@ -230,16 +273,41 @@ class ExtendDeleteUsers(View):
                           'users': users
                       })
 
-class EditUser(View):
-    def get(self, request, pk):
-        user = User.objects.get(pk=pk)
-        return render(request, 'editUser.html', {'user': user})
+    class userDisplay(View):
+        def get(self, request):
+            user = User.objects.get(userID=request.POST.get('userID'))
+            assignments = Assignment.objects.filter(userID=user)
+            sections = Section.objects.filter(userID=user)
+            return render(request, 'userDisplay.html',
+                          {
+                              'user': user,
+                              'assignments': assignments,
+                              'sections': sections
+                          })
 
-    def post(self, request, pk):
-        user = User.objects.get(pk=pk)
-        user.email = request.POST.get('email')
-        user.phone = request.POST.get('phone')
-        user.role = request.POST.get('role')
-        user.address = request.POST.get('address')
-        user.save()
-        return HttpResponse('User updated successfully')
+    class courseDisplay(View):
+        def get(self, request):
+            course = Course.objects.get(courseID=request.POST.get('courseID'))
+            assignments = Assignment.objects.filter(courseID=course)
+            sections = Section.objects.filter(courseID=course)
+            return render(request, 'courseDisplay.html',
+                          {
+                              'course': course,
+                              'assignments': assignments,
+                              'sections': sections
+                          })
+          
+    class EditUser(View):
+        def get(self, request, pk):
+            user = User.objects.get(pk=pk)
+            return render(request, 'editUser.html', {'user': user})
+
+        def post(self, request, pk):
+            user = User.objects.get(pk=pk)
+            user.email = request.POST.get('email')
+            user.phone = request.POST.get('phone')
+            user.role = request.POST.get('role')
+            user.address = request.POST.get('address')
+            user.save()
+            return HttpResponse('User updated successfully')
+

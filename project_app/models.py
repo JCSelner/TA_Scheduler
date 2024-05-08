@@ -23,7 +23,7 @@ class Seasons(models.TextChoices):
 
 
 class User(models.Model):
-    userID = models.CharField(max_length=20)
+    userID = models.CharField(max_length=20, unique=True)
     password = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20)
@@ -53,7 +53,7 @@ class Semester(models.Model):
 class Course(models.Model):
     courseName = models.CharField(max_length=50)
     courseDescription = models.CharField(max_length=1000)
-    courseID = models.IntegerField(primary_key=True)
+    courseID = models.IntegerField(primary_key=True, unique=True)
     courseSemester = models.ForeignKey(Semester, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -69,9 +69,9 @@ class Assignment(models.Model):
 
 
 class Section(models.Model):
-    courseID = models.ForeignKey(Course, on_delete=models.CASCADE)
-    taID = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    sectionID = models.CharField(max_length=20)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    taID = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
+    sectionID = models.CharField(max_length=20, primary_key=True, unique=True)
     type = models.CharField(max_length=10, choices=SectionTypes.choices)
 
     def __str__(self):
