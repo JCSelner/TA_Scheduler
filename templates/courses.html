@@ -34,7 +34,6 @@
         <td>
             <form action="{% url 'courseDisplay' pk=c.courseID %}" method="get">
                 {% csrf_token %}
-                <input type="hidden" name="courseID" value="{{ c.courseID }}">
                 <button type="submit" class="pageButton">View Page</button>
             </form>
         </td>

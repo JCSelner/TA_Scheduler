@@ -279,17 +279,20 @@ class UserDisplay(View):
     def get(self, request, pk):
         user = User.objects.get(userID=pk)
         assignments = Assignment.objects.filter(userID=user)
-        sections = Section.objects.filter(userID=user)
+        sections = Section.objects.filter(user=user)
         return render(request, 'userDisplay.html',
                       {
+                          'user': user,
+                          'assignments': assignments,
+                          'sections': sections
+                      })
 
 
 class CourseDisplay(View):
     def get(self, request, pk):
         course = Course.objects.get(courseID=pk)
-
         assignments = Assignment.objects.filter(courseID=course)
-        sections = Section.objects.filter(courseID=course)
+        sections = Section.objects.filter(course=course)
         return render(request, 'courseDisplay.html',
                       {
                           'course': course,
