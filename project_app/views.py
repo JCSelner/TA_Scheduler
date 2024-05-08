@@ -272,27 +272,29 @@ class ExtendDeleteUsers(View):
                           'users': users
                       })
 
-    class userDisplay(View):
-        def get(self, request):
-            user = User.objects.get(userID=request.POST.get('userID'))
-            assignments = Assignment.objects.filter(userID=user)
-            sections = Section.objects.filter(userID=user)
-            return render(request, 'userDisplay.html',
-                          {
-                              'user': user,
-                              'assignments': assignments,
-                              'sections': sections
-                          })
 
-    class courseDisplay(View):
-        def get(self, request):
-            course = Course.objects.get(courseID=request.POST.get('courseID'))
-            assignments = Assignment.objects.filter(courseID=course)
-            sections = Section.objects.filter(courseID=course)
-            return render(request, 'courseDisplay.html',
-                          {
-                              'course': course,
-                              'assignments': assignments,
-                              'sections': sections
-                          })
+class UserDisplay(View):
+    def get(self, request, pk):
+        user = User.objects.get(userID=pk)
+        assignments = Assignment.objects.filter(userID=user)
+        sections = Section.objects.filter(userID=user)
+        return render(request, 'userDisplay.html',
+                      {
+                          'user': user,
+                          'assignments': assignments,
+                          'sections': sections
+                        })
+
+
+class CourseDisplay(View):
+    def get(self, request, pk):
+        course = Course.objects.get(courseID=pk)
+        assignments = Assignment.objects.filter(courseID=course)
+        sections = Section.objects.filter(courseID=course)
+        return render(request, 'courseDisplay.html',
+                      {
+                          'course': course,
+                          'assignments': assignments,
+                          'sections': sections
+                        })
 
