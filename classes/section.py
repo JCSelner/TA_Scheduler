@@ -18,7 +18,18 @@ class SectionClass:
             return False
         Section.objects.create(sectionID=sectionID, type=sectionType, course=course, taID=taID)
         return True
-
+    def editSection(self, sectionID="", type=None, taID=None):
+        if not self.sectInDB(sectionID):
+            return False
+        section = Section.objects.get(sectionID=sectionID)
+        if type is None and taID is None:
+            return False
+        if type is not None:
+            section.type = type
+        if taID is not None:
+            section.taID = taID
+        section.save()
+        return True
     def deleteSection(self, sectionID=""):
         if not self.sectInDB(sectionID):
             return False

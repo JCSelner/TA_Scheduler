@@ -85,6 +85,42 @@ class testViewCourses(TestCase):
     def test_viewNonexistant(self):
         with self.assertRaises(ValueError):
             self.section.viewSection("C")
+class testEditSection(TestCase):
+    def setUp(self):
+        self.section = SectionClass()
+        self.course = CourseClass()
+        self.role = Roles.TA
+        self.user1 = User.objects.create(userID='testuser1', password='testpass1', email='test1@test.com',
+                                        phone='1234567890',
+                                        address='testaddress1', role=self.role, firstName='testfirst1',
+                                        lastName='testlast1')
+        self.user2 = User.objects.create(userID='testuser2', password='testpass2', email='test2@test.com',
+                                        phone='1234567891',
+                                        address='testaddress2', role=self.role, firstName='testfirst2',
+                                        lastName='testlast2')
+        self.season = Seasons.Fall
+        self.semester1 = Semester.objects.create(season=self.season, year=2024)
+        self.semester2 = Semester.objects.create(season=self.season, year=2025)
+        self.courseA = Course.objects.create(courseName='A', courseDescription='test', courseID=1,
+                                             courseSemester=self.semester1)
+        self.courseB = Course.objects.create(courseName='B', courseDescription='test', courseID=2,
+                                             courseSemester=self.semester2)
+        self.sectionA = Section.objects.create(sectionID="A", type="Lecture", course=self.courseA, taID=self.user1)
+        self.sectionB = Section.objects.create(sectionID="B", type="Lab", course=self.courseB, taID=self.user2)
+    def test_noInput(self):
+        self.assertFalse(self.section.editSection(self.sectionA.sectionID))
+    def test_editType(self):
+        self.assertTrue(self.section.editSection(self.sectionA.sectionID, "Lab"), "Section type should be changed")
+        self.assertEqual(Section.objects.get(sectionID=self.sectionA.sectionID).type, "Lab")
+    def test_editUser(self):
+        self.assertTrue(self.section.editSection(self.sectionA.sectionID, "Lecture", self.user2),
+                        "User should be changed")
+        self.assertEqual(Section.objects.get(sectionID=self.sectionA.sectionID).taID, self.user2)
+    def test_editBoth(self):
+        self.assertTrue(self.section.editSection(self.sectionA.sectionID, "Lab", self.user2),
+                        "Both fields should be changed")
+        self.assertEqual(Section.objects.get(sectionID=self.sectionA.sectionID).type, "Lab")
+        self.assertEqual(Section.objects.get(sectionID=self.sectionA.sectionID).taID, self.user2)
 class testSectInDB(TestCase):
     def setUp(self):
         self.section = SectionClass()
