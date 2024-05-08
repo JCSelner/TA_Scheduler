@@ -273,41 +273,46 @@ class ExtendDeleteUsers(View):
                           'users': users
                       })
 
-    class userDisplay(View):
-        def get(self, request):
-            user = User.objects.get(userID=request.POST.get('userID'))
-            assignments = Assignment.objects.filter(userID=user)
-            sections = Section.objects.filter(userID=user)
-            return render(request, 'userDisplay.html',
-                          {
-                              'user': user,
-                              'assignments': assignments,
-                              'sections': sections
-                          })
 
-    class courseDisplay(View):
-        def get(self, request):
-            course = Course.objects.get(courseID=request.POST.get('courseID'))
-            assignments = Assignment.objects.filter(courseID=course)
-            sections = Section.objects.filter(courseID=course)
-            return render(request, 'courseDisplay.html',
-                          {
-                              'course': course,
-                              'assignments': assignments,
-                              'sections': sections
-                          })
+class UserDisplay(View):
+    def get(self, request):
+        user = User.objects.get(userID=request.POST.get('userID'))
+        assignments = Assignment.objects.filter(userID=user)
+        sections = Section.objects.filter(userID=user)
+        return render(request, 'userDisplay.html',
+                      {
+                        'user': user,
+                        'assignments': assignments,
+                        'sections': sections
+                    })
+
+
+class CourseDisplay(View):
+    def get(self, request):
+        course = Course.objects.get(courseID=request.POST.get('courseID'))
+        assignments = Assignment.objects.filter(courseID=course)
+        sections = Section.objects.filter(courseID=course)
+        return render(request, 'courseDisplay.html',
+                      {
+                          'course': course,
+                          'assignments': assignments,
+                          'sections': sections
+                      })
           
-    class EditUser(View):
-        def get(self, request, pk):
-            user = User.objects.get(pk=pk)
-            return render(request, 'editUser.html', {'user': user})
+class EditUser(View):
+    def get(self, request, pk):
+        user = User.objects.get(pk=pk)
+        return render(request, 'editUser.html',
+                      {
+                          'user': user
+                      })
 
-        def post(self, request, pk):
-            user = User.objects.get(pk=pk)
-            user.email = request.POST.get('email')
-            user.phone = request.POST.get('phone')
-            user.role = request.POST.get('role')
-            user.address = request.POST.get('address')
-            user.save()
-            return HttpResponse('User updated successfully')
+    def post(self, request, pk):
+        user = User.objects.get(pk=pk)
+        user.email = request.POST.get('email')
+        user.phone = request.POST.get('phone')
+        user.role = request.POST.get('role')
+        user.address = request.POST.get('address')
+        user.save()
+        return HttpResponse('User updated successfully')
 
