@@ -69,18 +69,16 @@ class ExtendDeleteCourse(View):
 
 
 class ManageCourse(View):
-    class ManageUser(View):
-        def get(self, request):
-            try:
-                # Carry along the session of the current user to the 'account.html' page.
-                s = request.session['userID']
-            except KeyError:
-                # Handle 'KeyError' exceptions appropriately
-                return redirect('login')
-            return render(request, 'manageCourses.html',
-                          {
-                                'user_session': s
-                          })
+
+    def get(self, request):
+        try:
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
+        return render(request, 'manageCourses.html',
+                      {
+                          'user_session': s
+                      })
 
 
 class CreateCourse(View):
