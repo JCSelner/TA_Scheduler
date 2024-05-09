@@ -277,9 +277,9 @@ class ExtendDeleteUsers(View):
 class UserDisplay(View):
 
     def get(self, request, pk):
-        user = User.objects.get(userID=pk)
+        user = User.objects.get(pk=pk)
         assignments = Assignment.objects.filter(userID=user)
-        sections = Section.objects.filter(user=user)
+        sections = Section.objects.filter(taID=user)
         return render(request, 'userDisplay.html',
                       {
                           'user': user,
