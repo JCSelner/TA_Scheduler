@@ -29,14 +29,12 @@
     <table>
         {% csrf_token %}
         <tr>
-            <th>User Name</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Role</th>
         </tr>
         {% for a in assignments %}
         <tr>
-            <td>{{a.userID.userID}}</td>
             <td>{{a.userID.firstName}}</td>
             <td>{{a.userID.lastName}}</td>
             <td>{{a.userID.role}}</td>

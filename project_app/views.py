@@ -69,18 +69,16 @@ class ExtendDeleteCourse(View):
 
 
 class ManageCourse(View):
-    class ManageUser(View):
-        def get(self, request):
-            try:
-                # Carry along the session of the current user to the 'account.html' page.
-                s = request.session['userID']
-            except KeyError:
-                # Handle 'KeyError' exceptions appropriately
-                return redirect('login')
-            return render(request, 'manageCourses.html',
-                          {
-                                'user_session': s
-                          })
+
+    def get(self, request):
+        try:
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
+        return render(request, 'manageCourses.html',
+                      {
+                          'user_session': s
+                      })
 
 
 class CreateCourse(View):
@@ -275,23 +273,24 @@ class ExtendDeleteUsers(View):
 
 
 class UserDisplay(View):
-    def get(self, request):
-        user = User.objects.get(userID=request.POST.get('userID'))
+
+    def get(self, request, pk):
+        user = User.objects.get(pk=pk)
         assignments = Assignment.objects.filter(userID=user)
-        sections = Section.objects.filter(userID=user)
+        sections = Section.objects.filter(taID=user)
         return render(request, 'userDisplay.html',
                       {
-                        'user': user,
-                        'assignments': assignments,
-                        'sections': sections
-                    })
+                          'user': user,
+                          'assignments': assignments,
+                          'sections': sections
+                      })
 
 
 class CourseDisplay(View):
-    def get(self, request):
-        course = Course.objects.get(courseID=request.POST.get('courseID'))
+    def get(self, request, pk):
+        course = Course.objects.get(courseID=pk)
         assignments = Assignment.objects.filter(courseID=course)
-        sections = Section.objects.filter(courseID=course)
+        sections = Section.objects.filter(course=course)
         return render(request, 'courseDisplay.html',
                       {
                           'course': course,
@@ -315,4 +314,5 @@ class EditUser(View):
         user.address = request.POST.get('address')
         user.save()
         return HttpResponse('User updated successfully')
+
 

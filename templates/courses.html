@@ -9,8 +9,7 @@
 <body>
 
 <h1 class = "header">Courses</h1>
-<a href="/createCourse/">Create new course</a>
-<table id="user_table">
+<table id = "user_table">
     {% csrf_token %}
 
     <tr>
@@ -18,6 +17,7 @@
         <th>Semester</th>
         <th>Description</th>
         <th>Action</th>
+        <th>Page</th>
     </tr>
     {% for c in courses %}
     <tr>
@@ -29,6 +29,11 @@
                 {% csrf_token %}
                 <input type="hidden" name="courseID" value="{{ c.courseID }}">
                 <button type="submit" class="button">Delete</button>
+            </form>
+        </td>
+        <td>
+            <form action="{% url 'courseDisplay' pk=c.courseID %}" method="get">
+                <button type="submit" class="pageButton">View Page</button>
             </form>
         </td>
     </tr>

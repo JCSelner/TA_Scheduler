@@ -19,6 +19,7 @@
             <th>Last Name</th>
             <th>Role</th>
             <th>Action</th>
+            <th>Page</th>
         </tr>
         {% for i in users %}
             <tr>
@@ -34,6 +35,11 @@
                     </form>
                     <form action="{% url 'editUser' pk=i.pk %}" method="get">
                         <button type="submit" class="button">Edit</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="{% url 'userDisplay' pk=i.pk %}" method="get">
+                        <button type="submit" class="pageButton">View Page</button>
                     </form>
                 </td>
             </tr>
