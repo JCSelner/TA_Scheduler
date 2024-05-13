@@ -17,14 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-<<<<<<< thomasBranch3
-from project_app.views import (Courses, Login, Logout, Home, InstructorHome, TeachingAssistantHome, CreateCourse, ManageUser, CreateUser, DeleteUser,
-                               ExtendDeleteUsers, ExtendDeleteCourse,ManageCourse, EditUser, CourseDisplay, UserDisplay, CreateSection, EditSection)
-=======
 from project_app.views import (Courses, Login, Logout, Home, InstructorHome, TeachingAssistantHome, CreateCourse,
                                ManageUser, ManageAccount, CreateUser, DeleteUser, ExtendDeleteUsers, ExtendDeleteCourse,
-                               ManageCourse, EditUser, CourseDisplay, UserDisplay)
->>>>>>> master
+                               ManageCourse, EditUser, CourseDisplay, UserDisplay, CreateSection, EditSection)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -46,5 +41,5 @@ urlpatterns = [
     path('courseDisplay/<int:pk>/', CourseDisplay.as_view(), name='courseDisplay'),
     path('userDisplay/<int:pk>/', UserDisplay.as_view(), name='userDisplay'),
     path('createSection/', CreateSection.as_view(), name='createSection'),
-    path('editSection/', EditSection.as_view(), name='editSection')
+    path('editSection/<int:pk>/', EditSection.as_view(), name='editSection')
 ]
