@@ -6,5 +6,12 @@
 </head>
 <body>
 <h1>Homepage</h1>
+<a href="{% url 'logout' %}">Logout</a>
+<hr/>
+{% for i in users %}
+    <form action="{% url 'instructor_account' pk=i.pk %}" method="get">
+        <button type="submit">Manage Account</button>
+    </form>
+{% endfor %}
 </body>
 </html>
