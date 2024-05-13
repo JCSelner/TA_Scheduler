@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons
+from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons, SectionTypes
 from classes.courseClass import CourseClass
+from classes.section import SectionClass
 from django.http import HttpResponse
 
 
@@ -334,5 +335,60 @@ class EditUser(View):
         user.address = request.POST.get('address')
         user.save()
         return HttpResponse('User updated successfully')
+
+    class CreateSection(View):
+        def get(self, request, pk):
+            try:
+                s = request.session['userID']
+            except KeyError:
+                return redirect('login')
+            course = Course.objects.get(courseID=pk)
+            tas = User.objects.filter(role='TA')
+            return render(request, 'createSection.html',
+                          {
+                              'course': course,
+                              'taID': tas,
+                              'types': SectionTypes.choices,
+                              'errorMessage': ""
+                          })
+
+        def post(self, request, pk):
+            course = Course.objects.get(courseID=pk)
+            sectionID = request.POST.get('sectionID')
+            type = request.POST.get('type')
+            taID = request.POST.get('TA')
+
+            if (SectionClass.createSection(sectionID=sectionID, type=type, course=course, taID=taID)):
+                return redirect('courseDisplay')
+            else:
+                course = Course.objects.get(courseID=pk)
+                tas = User.objects.filter(role='TA')
+                return render(request, 'createSection.html',
+                              {
+                                  'course': course,
+                                  'taID': tas,
+                                  'types': SectionTypes.choices,
+                                  'errorMessage': "Failed to create Section."
+                              })
+
+    class EditSection(View):
+        def get(self, request, pk):
+            try:
+                s = request.session['userID']
+            except KeyError:
+                return redirect('login')
+            section = Section.objects.get(pk=pk)
+            return render(request, 'editSection.html',
+                          {
+                              'section': section
+                          })
+
+        def post(self, request, pk):
+            section = Section.objects.get(pk=pk)
+            section.type = request.POST.get('type')
+            section.taID = request.POSt.get('taID')
+            section.save()
+            return HttpResponse("Section updated successfully")
+
 
 
