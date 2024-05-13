@@ -69,8 +69,12 @@ class AccountTestCase(TestCase):
 
     def test_edit_user_invalid_attribute(self):
         account = Account()
+        user = User.objects.create(userID='test_user', password='test_pass', email='test@example.com',
+                                   phone='1234567890', firstName='Test', lastName='User', role='Tester',
+                                   address='123 Test St.')
         with self.assertRaises(AttributeError):
-            account.edit_user(invalid_attribute='value')
+            account.edit_user(user, invalid_attribute='value')
+            user.save()
 
     def test_edit_user_form_submission(self):
         user = User.objects.create(userID='test_user', password='test_pass', email='test@example.com',

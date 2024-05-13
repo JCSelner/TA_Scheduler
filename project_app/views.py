@@ -1,6 +1,12 @@
 from django.shortcuts import render, redirect
 from django.views import View
+<<<<<<< thomasBranch3
 from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons, SectionTypes
+=======
+
+from classes.accounts import Account
+from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons
+>>>>>>> master
 from classes.courseClass import CourseClass
 from classes.section import SectionClass
 from django.http import HttpResponse
@@ -147,7 +153,7 @@ class Login(View):
             error_message = "Invalid username or password."
             return render(request, 'login.html',
                           {
-                                'error_message': error_message
+                              'error_message': error_message
                           })
 
 
@@ -161,7 +167,7 @@ class Home(View):
             return redirect('login')
         return render(request, 'home.html',
                       {
-                            'user_session': s
+                          'user_session': s
                       })
 
 
@@ -171,7 +177,12 @@ class InstructorHome(View):
             s = request.session['userID']
         except KeyError:
             return redirect('login')
-        return render(request, 'instructor_home.html', {'user_session': s})
+        users = User.objects.filter(userID=s).all()
+        return render(request, 'instructor_home.html',
+                      {
+                          'user_session': s,
+                          'users': users
+                      })
 
 
 class TeachingAssistantHome(View):
@@ -201,8 +212,50 @@ class ManageUser(View):
             return redirect('login')
         return render(request, 'account.html',
                       {
-                            'user_session': s
+                          'user_session': s
                       })
+
+
+class ManageAccount(View):
+    def get(self, request, pk):
+        try:
+            # Carry along the session of the current user to the 'account.html' page.
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
+        user = User.objects.get(pk=pk)
+        return render(request, 'manage_account.html',
+                      {
+                          'user': user,
+                          'user_session': s
+                      })
+
+    def post(self, request, pk):
+        account = Account()
+        user = User.objects.get(pk=pk)
+
+        # Gather all the data from the user
+        user_data = {
+            'userID': request.POST.get('username'),
+            'firstName': request.POST.get('firstName'),
+            'lastName': request.POST.get('lastName'),
+            'phone': request.POST.get('phoneNumber'),
+            'email': request.POST.get('email'),
+            'address': request.POST.get('address')
+        }
+
+        # Use the edit_user method to update the user instance
+        account.edit_user(user, **user_data)
+
+        # Save the changes to the user instance
+        user.save()
+        confirmation_message = 'User Updated Successfully!'
+        return render(request, 'manage_account.html',
+                      {
+                          'user': user,
+                          'confirmation_message': confirmation_message
+                      })
+        # return HttpResponse('User Updated Successfully')
 
 
 class CreateUser(View):
@@ -314,7 +367,8 @@ class CourseDisplay(View):
                           'assignments': assignments,
                           'sections': sections
                       })
-          
+
+
 class EditUser(View):
     def get(self, request, pk):
         try:
@@ -335,6 +389,7 @@ class EditUser(View):
         user.address = request.POST.get('address')
         user.save()
         return HttpResponse('User updated successfully')
+<<<<<<< thomasBranch3
 
     class CreateSection(View):
         def get(self, request, pk):
@@ -392,3 +447,5 @@ class EditUser(View):
 
 
 
+=======
+>>>>>>> master
