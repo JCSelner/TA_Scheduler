@@ -1,12 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
-<<<<<<< thomasBranch3
 from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons, SectionTypes
-=======
-
 from classes.accounts import Account
-from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons
->>>>>>> master
 from classes.courseClass import CourseClass
 from classes.section import SectionClass
 from django.http import HttpResponse
@@ -389,7 +384,6 @@ class EditUser(View):
         user.address = request.POST.get('address')
         user.save()
         return HttpResponse('User updated successfully')
-<<<<<<< thomasBranch3
 
     class CreateSection(View):
         def get(self, request, pk):
@@ -444,8 +438,3 @@ class EditUser(View):
             section.taID = request.POSt.get('taID')
             section.save()
             return HttpResponse("Section updated successfully")
-
-
-
-=======
->>>>>>> master
