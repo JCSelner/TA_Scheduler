@@ -10,6 +10,10 @@ from django.http import HttpResponse
 
 class Courses(View):
     def get(self, request):
+        try:
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
         courses = Course.objects.all()
         return render(request, 'courses.html',
                       {
@@ -83,6 +87,10 @@ class ManageCourse(View):
 
 class CreateCourse(View):
     def get(self, request):
+        try:
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
         semesters = Semester.objects.all()
         return render(request, 'createCourse.html',
                       {
@@ -100,7 +108,7 @@ class CreateCourse(View):
 
         description = request.POST.get('Description')
         if (CourseClass.createCourse(CourseClass, name, semester[0], len(courses) + 1, description)):
-            return redirect('courses')
+            return redirect("/manageCourse/")
         else:
             semesters = Semester.objects.all()
             return render(request, 'createCourse.html',
@@ -275,6 +283,10 @@ class ExtendDeleteUsers(View):
 class UserDisplay(View):
 
     def get(self, request, pk):
+        try:
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
         user = User.objects.get(pk=pk)
         assignments = Assignment.objects.filter(userID=user)
         sections = Section.objects.filter(taID=user)
@@ -288,6 +300,10 @@ class UserDisplay(View):
 
 class CourseDisplay(View):
     def get(self, request, pk):
+        try:
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
         course = Course.objects.get(courseID=pk)
         assignments = Assignment.objects.filter(courseID=course)
         sections = Section.objects.filter(course=course)
@@ -300,6 +316,10 @@ class CourseDisplay(View):
           
 class EditUser(View):
     def get(self, request, pk):
+        try:
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
         user = User.objects.get(pk=pk)
         return render(request, 'editUser.html',
                       {
