@@ -13,14 +13,15 @@
 {% csrf_token %}
 <table>
     <tr>
-        <th>SectionID</th>
-        <th>Type</th>
-        <th>User</th>
-    </tr>
-    <tr>
+        <th>SectionID:</th>
         <td>
             <input name="Name" type="text"/>
         </td>
+
+
+    </tr>
+    <tr>
+        <th>Type:</th>
         <td>
             <select name="type">
                 {% for type in types %}
@@ -28,6 +29,9 @@
                 {% endfor %}
             </select>
         </td>
+    </tr>
+    <tr>
+        <th>User:</th>
         <td>
             <select name="TA">
                 {% for i in taID %}
@@ -35,6 +39,9 @@
                 {% endfor %}
             </select>
         </td>
+
+    </tr>
+    <tr>
         <td> <button type="submit" class="button">Create</button> </td>
     </tr>
 </table>
