@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 
 from project_app.views import (Courses, Login, Logout, Home, InstructorHome, TeachingAssistantHome, CreateCourse, ManageUser, CreateUser, DeleteUser,
-                               ExtendDeleteUsers, ExtendDeleteCourse,ManageCourse, EditUser, CourseDisplay, UserDisplay)
+                               ExtendDeleteUsers, ExtendDeleteCourse,ManageCourse, EditUser, CourseDisplay, UserDisplay, AssignToCourse)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,5 +37,6 @@ urlpatterns = [
     path('editUser/<int:pk>/', EditUser.as_view(), name='editUser'),
     path('manageCourse/', ManageCourse.as_view(), name='manageCourse'),
     path('courseDisplay/<int:pk>/', CourseDisplay.as_view(), name='courseDisplay'),
-    path('userDisplay/<int:pk>/', UserDisplay.as_view(), name='userDisplay')
+    path('userDisplay/<int:pk>/', UserDisplay.as_view(), name='userDisplay'),
+    path('assignToCourse/<int:pk>/', AssignToCourse.as_view(), name='assignToCourse')
 ]

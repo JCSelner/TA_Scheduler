@@ -33,12 +33,8 @@ class User(models.Model):
     lastName = models.CharField(max_length=20)
 
     def __str__(self):
-        return (self.userID
-                + " " + self.firstName
-                + " " + self.lastName
-                + " " + self.email
-                + " " + self.phone
-                + " " + self.address)
+        # changed the __str__ method, so it can render in assign to course properly
+        return self.userID
 
 
 class Semester(models.Model):
