@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit Section</title>
+</head>
+<body>
+    <h1>Edit Section</h1>
+    <div style="display: flex;">
+        <div style="flex: 1;">
+            <h2>Existing Section Information</h2>
+            <table>
+                <tr>
+                    <th>Section ID</th>
+                    <td>{{ section.sectionID }}</td>
+                </tr>
+                <tr>
+                    <th>Type</th>
+                    <td>{{ section.type }}</td>
+                </tr>
+                <tr>
+                    <th>Course</th>
+                    <td>{{ user.lastName }}</td>
+                </tr>
+                <tr>
+                    <th>TA</th>
+                    <td>{{ section.taID }}</td>
+                </tr>
+            </table>
+        </div>
+        <div style="flex: 1;">
+            <h2>Edit Section Information</h2>
+            <form method="post">
+                {% csrf_token %}
+                <label for="type">Type:</label><br>
+                <input type="text" id="type" name="type" value="{{ section.type }}"><br>
+                <label for="taID">TA:</label><br>
+                <input type="text" id="taID" name="taID" value="{{ section.taID }}"><br>
+                <input type="submit" value="Save Changes">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

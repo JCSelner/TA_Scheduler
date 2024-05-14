@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/create_user_style.css' %}">
+    <title>Create Section</title>
+</head>
+<body>
+<h1 class="header">Create Section</h1>
+<div class="container">
+<form action="/createSection/" method="post" class="form">
+{% csrf_token %}
+    SectionID:
+    <input name="Name" type="text"/>
+    Type:
+    <select name="type">
+        {% for type in types %}
+            <option value="{{ type.0 }}">{{ type.1 }}</option>
+        {% endfor %}
+    </select>
+    Course:
+    <select name="Course">
+        {% for i in course %}
+            option{{ i }}
+        {% endfor %}
+    </select>
+    User:
+    <select name="TA">
+    {% for i in taID %}
+        <option>{{i}}</option>
+    {% endfor %}
+    </select>
+
+</form>
+</div>
+<h1>{{errorMessage}}</h1>
+<br/><a href="/courseDisplay/">Course Display</a>
+</body>
+</html>
