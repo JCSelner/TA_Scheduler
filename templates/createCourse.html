@@ -9,23 +9,68 @@
 <body>
 <h1 class="header">Create Course</h1>
 <div class="container">
+<table>
 <form action="/createCourse/" method="post" class="form">
 {% csrf_token %}
-    Name:
-    <input name="Name" type="text"/>
-    Semester:
-    <select name="Semester" >
-    {% for i in semester %}
-        <option>{{i}}</option>
-    {% endfor %}
-    </select>
-    Description:
-    <input name="Description" type="text"/>
-    <input type="submit"/>
-
+    <tr>
+        <th>Name</th>
+        <th>Semester</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>
+            <input name="Name" type="text"/>
+        </td>
+        <td>
+            <select name="Semester" >
+            {% for i in semester %}
+                <option>{{i}}</option>
+            {% endfor %}
+            </select>
+        </td>
+        <td>
+            <input name="Description" type="text"/>
+        </td>
+        <td>
+            <input type="submit"/>
+        </td>
+    </tr>
 </form>
+</table>
 </div>
-<h1>{{errorMessage}}</h1>
+<h2>{{errorMessage}}</h2>
+
+<div class = "container">
+<table>
+
+
+    <h2 class="tableHeader" >Create New Semester</h2>
+
+    <tr>
+        <th>Season</th>
+        <th>Year</th>
+    </tr>
+    <tr>
+        <form action="/courses/" method="post">
+        {% csrf_token %}
+            <td>
+                <select name="Season">
+                    {% for i in seasons %}
+                        <option >{{i.1}}</option>
+                    {% endfor %}
+                 </select>
+            </td>
+            <td>
+                <input name="Year" type="number"/>
+            </td>
+            <td>
+                <input type="submit"/>
+            </td>
+        </form>`
+    </tr>
+</table>
+</div>
+<h2>{{ semErrorMessage }}</h2>
 <br/><a href="/manageCourse/">Manage Courses</a>
 </body>
 </html>

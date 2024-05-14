@@ -21,7 +21,7 @@ class Courses(View):
         return render(request, 'courses.html',
                       {
                           "courses": courses,
-                          "seasons": Seasons.choices, "errorMessage": ""
+
                       })
 
     def post(self, request):
@@ -31,32 +31,38 @@ class Courses(View):
         try:
             year = int(request.POST['Year'])
         except(ValueError):
-            return render(request, 'courses.html',
+            return render(request, 'createCourse.html',
                           {
                               "courses": courses,
                               "seasons": Seasons.choices,
-                              "errorMessage": "The year must not be blank"
+                              "semester": semesters,
+                              "semErrorMessage": "The year must not be blank"
                           })
 
         season = request.POST['Season']
         if (year < currentYear):
-            return render(request, 'courses.html',
-                          {
-                              "courses": courses, "seasons": Seasons.choices,
-                              "errorMessage": "The year must be at least " + str(currentYear)
-                          })
-        if (len(Semester.objects.filter(year=year, season=season)) != 0):
-            return render(request, 'courses.html',
-                          {
-                              "courses": courses, "seasons": Seasons.choices,
-                              "errorMessage": season + " " + year.__str__() + " is already in the database"
-                          })
-        else:
-            Semester.objects.create(year=year, season=season, semesterID=len(semesters) + 1)
-            return render(request, "courses.html",
+            return render(request, 'createCourse.html',
                           {
                               "courses": courses,
                               "seasons": Seasons.choices,
+                              "semester": semesters,
+                              "semErrorMessage": "The year must be at least " + str(currentYear)
+                          })
+        if (len(Semester.objects.filter(year=year, season=season)) != 0):
+            return render(request, 'createCourse.html',
+                          {
+                              "courses": courses,
+                              "seasons": Seasons.choices,
+                              "semester": semesters,
+                              "semErrorMessage": season + " " + year.__str__() + " is already in the database"
+                          })
+        else:
+            Semester.objects.create(year=year, season=season, semesterID=len(semesters) + 1)
+            return render(request, "createCourse.html",
+                          {
+                              "courses": courses,
+                              "seasons": Seasons.choices,
+                              "semester": semesters,
                               "errorMessage": ""
                           })
 
@@ -98,6 +104,7 @@ class CreateCourse(View):
         return render(request, 'createCourse.html',
                       {
                           "semester": semesters,
+                          "seasons": Seasons.choices,
                           "errorMessage": ""
                       })
 
@@ -117,7 +124,8 @@ class CreateCourse(View):
             return render(request, 'createCourse.html',
                           {
                               "semester": semesters,
-                              "errorMessage": "The course is invalid"
+                              "seasons": Seasons.choices,
+                              "errorMessage": name + " " + semester[0].__str__() + " is already in the database"
                           })
 
 
@@ -264,7 +272,8 @@ class CreateUser(View):
         return render(request, 'createUser.html',
                       {
                           'roles': Roles.choices,
-                          'user_session': s
+                          'user_session': s,
+                          'errorMessage': ''
                       })
 
     def post(self, request):
@@ -276,19 +285,26 @@ class CreateUser(View):
         role = request.POST['role']
         first_name = request.POST['firstName']
         last_name = request.POST['lastName']
-
-        User.objects.create(userID=username,
-                            password=password,
-                            email=email,
-                            phone=contact_number,
-                            address=address,
-                            role=role,
-                            firstName=first_name,
-                            lastName=last_name)
-        return render(request, 'createUser.html',
-                      {
-                          'roles': Roles.choices
-                      })
+        if (User.objects.filter(userID=username).exists() or User.objects.filter(email=email).exists()):
+            return render(request, 'createUser.html',
+                          {
+                              'roles': Roles.choices,
+                              'errorMessage': 'Username or email is already in use.'
+                          })
+        else:
+            User.objects.create(userID=username,
+                                password=password,
+                                email=email,
+                                phone=contact_number,
+                                address=address,
+                                role=role,
+                                firstName=first_name,
+                                lastName=last_name)
+            return render(request, 'createUser.html',
+                          {
+                              'roles': Roles.choices,
+                              'errorMessage': ''
+                          })
 
 
 class DeleteUser(View):
@@ -393,7 +409,11 @@ class CreateSection(View):
         except KeyError:
             return redirect('login')
         course = Course.objects.get(courseID=pk)
-        tas = User.objects.filter(role='TA')
+        taAssigments = Assignment.objects.filter(courseID=course)
+        tas = []
+        for ta in taAssigments:
+            tas.append(ta.userID)
+
         return render(request, 'createSection.html',
                       {
                           'course': course,
@@ -404,15 +424,17 @@ class CreateSection(View):
 
     def post(self, request, pk):
         course = Course.objects.get(courseID=pk)
-        sectionID = request.POST.get('sectionID')
+        sectionID = request.POST.get('Name')
         type = request.POST.get('type')
-        taID = request.POST.get('TA')
-
-        if (SectionClass.createSection(sectionID=sectionID, type=type, course=course, taID=taID)):
+        taName = request.POST.get('TA')
+        taID = User.objects.get(userID=taName)
+        if (SectionClass.createSection(SectionClass,sectionID=sectionID, type=type, course=course, taID=taID)):
             return redirect('courseDisplay')
         else:
-            course = Course.objects.get(courseID=pk)
-            tas = User.objects.filter(role='TA')
+            taAssigments = Assignment.objects.filter(courseID=course)
+            tas = []
+            for ta in taAssigments:
+                tas.append(ta.userID)
             return render(request, 'createSection.html',
                           {
                               'course': course,
@@ -427,7 +449,7 @@ class EditSection(View):
             s = request.session['userID']
         except KeyError:
             return redirect('login')
-        section = Section.objects.get(pk=pk)
+        section = Section.objects.get(sectionID=pk)
         return render(request, 'editSection.html',
                       {
                           'section': section
@@ -436,7 +458,7 @@ class EditSection(View):
     def post(self, request, pk):
         section = Section.objects.get(pk=pk)
         section.type = request.POST.get('type')
-        section.taID = request.POSt.get('taID')
+        section.taID = request.POST.get('taID')
         section.save()
         return HttpResponse("Section updated successfully")
 class AssignToCourse(View):

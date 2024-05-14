@@ -21,10 +21,18 @@
             <td>{{s.sectionID}}</td>
             <td>{{s.type}}</td>
             <td>{{s.taID.userID}}</td>
+            <td>
+                <form action="{% url 'editSection' pk=s.sectionID %}" method="get">
+                    {% csrf_token %}
+                    <button type="submit" >View Page</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </table>
-
+    <form action="{% url 'createSection' pk=course.courseID %}" method="get">
+        <button type="submit" >Create Section</button>
+    </form>
     <h2>Assigned Users: </h2>
     <table>
         {% csrf_token %}

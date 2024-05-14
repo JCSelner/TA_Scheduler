@@ -9,35 +9,68 @@
 <body>
 <h1 class="header">Create User</h1>
 <div class="container">
+
     <form action="{% url 'createUser' %}" method="post" class="form">
         {% csrf_token %}
-        <label for='first_name'>First Name:</label>
-        &nbsp;<input name='firstName' type='text' id='first_name'><br><br>
-        <label for='last_name'>Last Name:</label>
-        &nbsp;<input name='lastName' type='text' id='last_name'><br><br>
-        <label for='Username'>Username:</label>
-        &nbsp;<input name='userID' type='text' id='Username'><br><br>
-        <label for='Password'>Password:</label>
-        &nbsp;<input name='password' type='password' id='Password'><br><br>
-        <label for='Email'>Email:</label>
-        &nbsp;<input name='email' type='email' id='Email'><br><br>
-        <label for='Phone'>Contact Number:</label>
-        &nbsp;<input name='phone' type='text' id='Phone'><br><br>
-        <label for='Address'>Mailing Address:</label>
-        &nbsp;<input name='address' type='text' id='Address'><br><br>
-        Role:
-        <select name='role'>
-            {% for role in roles %}
-                <option value="{{ role.0 }}">{{ role.1 }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
-        <button type="submit" class="button">Create</button>
+        <table>
+
+        <tr>
+            <th>First Name:</th>
+            <td><input name='firstName' type='text' id='first_name'></td>
+        </tr>
+        <tr></tr>
+        <tr>
+            <th>Last Name:</th>
+            <td><input name='lastName' type='text' id='last_name'></td>
+        </tr>
+        <tr></tr>
+        <tr>
+            <th>Username:</th>
+            <td><input name='userID' type='text' id='Username'></td>
+        </tr>
+        <tr></tr>
+        <tr>
+            <th>Password:</th>
+            <td><input name='password' type='password' id='Password'></td>
+        </tr>
+        <tr></tr>
+        <tr>
+            <th>Email:</th>
+            <td><input name='email' type='email' id='Email'></td>
+        </tr>
+        <tr></tr>
+        <tr>
+            <th>Contact Number:</th>
+            <td><input name='phone' type='text' id='Phone'></td>
+        </tr>
+        <tr></tr>
+        <tr>
+            <th>Mailing Address:</th>
+            <td><input name='address' type='text' id='Address'></td>
+        </tr>
+        <tr></tr>
+        <tr>
+            <th>Role:</th>
+            <td>
+            <select name='role'>
+                {% for role in roles %}
+                    <option value="{{ role.0 }}">{{ role.1 }}</option>
+                {% endfor %}
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <td><button type="submit" class="button">Create</button></td>
+
+        </tr>
+
+        </table>
     </form>
-    <br>
+
     <ul>
         <li><a href="{% url 'manageUser' %}">Manage Users</a></li>
     </ul>
 </div>
+<h2>{{ errorMessage }}</h2>
 </body>
 </html>

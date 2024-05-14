@@ -43,7 +43,7 @@ urlpatterns = [
     path('courseDisplay/<int:pk>/', CourseDisplay.as_view(), name='courseDisplay'),
     path('userDisplay/<int:pk>/', UserDisplay.as_view(), name='userDisplay'),
     path('assignToCourse/<int:pk>/', AssignToCourse.as_view(), name='assignToCourse'),
-    path('createSection/', CreateSection.as_view(), name='createSection'),
-    path('editSection/<int:pk>/', EditSection.as_view(), name='editSection')
+    path('createSection/<int:pk>/', CreateSection.as_view(), name='createSection'),
+    path('editSection/<str:pk>/', EditSection.as_view(), name='editSection')
 
 ]

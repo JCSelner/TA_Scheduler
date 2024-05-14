@@ -9,32 +9,40 @@
 <body>
 <h1 class="header">Create Section</h1>
 <div class="container">
-<form action="/createSection/" method="post" class="form">
+<form action="{% url 'createSection' pk=course.courseID %}"  method="post" class="form">
 {% csrf_token %}
-    SectionID:
-    <input name="Name" type="text"/>
-    Type:
-    <select name="type">
-        {% for type in types %}
-            <option value="{{ type.0 }}">{{ type.1 }}</option>
-        {% endfor %}
-    </select>
-    Course:
-    <select name="Course">
-        {% for i in course %}
-            option{{ i }}
-        {% endfor %}
-    </select>
-    User:
-    <select name="TA">
-    {% for i in taID %}
-        <option>{{i}}</option>
-    {% endfor %}
-    </select>
-
+<table>
+    <tr>
+        <th>SectionID</th>
+        <th>Type</th>
+        <th>User</th>
+    </tr>
+    <tr>
+        <td>
+            <input name="Name" type="text"/>
+        </td>
+        <td>
+            <select name="type">
+                {% for type in types %}
+                    <option value="{{ type.0 }}">{{ type.1 }}</option>
+                {% endfor %}
+            </select>
+        </td>
+        <td>
+            <select name="TA">
+                {% for i in taID %}
+                    <option>{{i}}</option>
+                {% endfor %}
+            </select>
+        </td>
+        <td>
+            <input type="submit"/>
+        </td>
+    </tr>
+</table>
 </form>
 </div>
 <h1>{{errorMessage}}</h1>
-<br/><a href="/courseDisplay/">Course Display</a>
+<br/><a href="{% url 'courseDisplay' pk=course.courseID %}">Course Display</a>
 </body>
 </html>
