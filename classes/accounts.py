@@ -28,18 +28,10 @@ class Account(object):
         self.role = 'TA'
         self.address = None
 
-    def edit_user(self, **kwargs):
+    def edit_user(self, user, **kwargs):
         for key, value in kwargs.items():
-            if hasattr(self, key):
-                if key == 'email':
-                    self.set_email(value)
-                elif key == 'phone':
-                    self.set_phone(value)
-                elif key == 'role':
-                    self.validate_role(value)
-                    setattr(self, key, value)
-                else:
-                    setattr(self, key, value)
+            if hasattr(User, key):
+                setattr(user, key, value)
             else:
                 raise AttributeError(f"Attribute '{key}' does not exist in Account")
 
