@@ -19,7 +19,9 @@ from django.urls import path
 
 from project_app.views import (Courses, Login, Logout, Home, InstructorHome, TeachingAssistantHome, CreateCourse,
                                ManageUser, ManageAccount, CreateUser, DeleteUser, ExtendDeleteUsers, ExtendDeleteCourse,
-                               ManageCourse, EditUser, CourseDisplay, UserDisplay)
+                               ManageCourse, EditUser, CourseDisplay, UserDisplay, CreateSection, EditSection,
+                               AssignToCourse)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -39,5 +41,9 @@ urlpatterns = [
     path('editUser/<int:pk>/', EditUser.as_view(), name='editUser'),
     path('manageCourse/', ManageCourse.as_view(), name='manageCourse'),
     path('courseDisplay/<int:pk>/', CourseDisplay.as_view(), name='courseDisplay'),
-    path('userDisplay/<int:pk>/', UserDisplay.as_view(), name='userDisplay')
+    path('userDisplay/<int:pk>/', UserDisplay.as_view(), name='userDisplay'),
+    path('assignToCourse/<int:pk>/', AssignToCourse.as_view(), name='assignToCourse'),
+    path('createSection/', CreateSection.as_view(), name='createSection'),
+    path('editSection/<int:pk>/', EditSection.as_view(), name='editSection')
+
 ]

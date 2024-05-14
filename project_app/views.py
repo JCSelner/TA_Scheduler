@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views import View
-
+from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons, SectionTypes
 from classes.accounts import Account
-from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons
 from classes.courseClass import CourseClass
+from classes.section import SectionClass
 from django.http import HttpResponse
+from classes.assignmentClass import AssignmentClass
 
 
 # Create your views here.
@@ -384,3 +385,91 @@ class EditUser(View):
         user.address = request.POST.get('address')
         user.save()
         return HttpResponse('User updated successfully')
+
+class CreateSection(View):
+    def get(self, request, pk):
+        try:
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
+        course = Course.objects.get(courseID=pk)
+        tas = User.objects.filter(role='TA')
+        return render(request, 'createSection.html',
+                      {
+                          'course': course,
+                          'taID': tas,
+                          'types': SectionTypes.choices,
+                          'errorMessage': ""
+                      })
+
+    def post(self, request, pk):
+        course = Course.objects.get(courseID=pk)
+        sectionID = request.POST.get('sectionID')
+        type = request.POST.get('type')
+        taID = request.POST.get('TA')
+
+        if (SectionClass.createSection(sectionID=sectionID, type=type, course=course, taID=taID)):
+            return redirect('courseDisplay')
+        else:
+            course = Course.objects.get(courseID=pk)
+            tas = User.objects.filter(role='TA')
+            return render(request, 'createSection.html',
+                          {
+                              'course': course,
+                              'taID': tas,
+                              'types': SectionTypes.choices,
+                              'errorMessage': "Failed to create Section."
+                          })
+
+class EditSection(View):
+    def get(self, request, pk):
+        try:
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
+        section = Section.objects.get(pk=pk)
+        return render(request, 'editSection.html',
+                      {
+                          'section': section
+                      })
+
+    def post(self, request, pk):
+        section = Section.objects.get(pk=pk)
+        section.type = request.POST.get('type')
+        section.taID = request.POSt.get('taID')
+        section.save()
+        return HttpResponse("Section updated successfully")
+class AssignToCourse(View):
+    def get(self, request, pk):
+        course = Course.objects.get(courseID=pk)
+        assignments = Assignment.objects.filter(courseID=course)
+        users = User.objects.all().exclude(role=Roles.ADMIN)
+        return render(request, 'user2course.html',
+                      {
+                          'assignments': assignments,
+                          'users': users,
+                          'course': course,
+                          'message': ''
+                      })
+
+    def post(self, request, pk):
+        course = Course.objects.get(courseID=pk)
+        user = User.objects.get(userID=request.POST.get('User'))
+        assignments = Assignment.objects.filter(courseID=course)
+        users = User.objects.all().exclude(role=Roles.ADMIN)
+        if (AssignmentClass.assignUser(AssignmentClass,user.userID, course.courseID)):
+            return render(request, 'user2course.html',
+                          {
+                              'assignments': assignments,
+                              'users': users,
+                              'course': course,
+                              'message': user.userID + ' is successfully assigned to ' + course.courseName
+                          })
+        else:
+            return render(request, 'user2course.html',
+                          {
+                              'assignments': assignments,
+                              'users': users,
+                              'course': course,
+                              'message': user.userID + ' is already assigned to the course'
+                          })

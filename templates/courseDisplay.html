@@ -40,8 +40,10 @@
             <td>{{a.userID.role}}</td>
         </tr>
         {% endfor %}
-
     </table>
+    <form action="{% url 'assignToCourse' pk=course.courseID %}" method="get">
+        <button type="submit" >Assign users to course</button>
+    </form>
     <a href="/courses/">Return to courses</a>
 </body>
 </html>
