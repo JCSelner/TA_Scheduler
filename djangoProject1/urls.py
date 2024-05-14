@@ -19,7 +19,8 @@ from django.urls import path
 
 from project_app.views import (Courses, Login, Logout, Home, InstructorHome, TeachingAssistantHome, CreateCourse,
                                ManageUser, ManageAccount, CreateUser, DeleteUser, ExtendDeleteUsers, ExtendDeleteCourse,
-                               ManageCourse, EditUser, CourseDisplay, UserDisplay, CreateSection, EditSection)
+                               ManageCourse, EditUser, CourseDisplay, UserDisplay, CreateSection, EditSection,
+                               AssignToCourse)
 
 
 urlpatterns = [
