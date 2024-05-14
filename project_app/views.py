@@ -428,13 +428,20 @@ class CreateSection(View):
         type = request.POST.get('type')
         taName = request.POST.get('TA')
         taID = User.objects.get(userID=taName)
+        taAssigments = Assignment.objects.filter(courseID=course)
+        tas = []
+        for ta in taAssigments:
+            tas.append(ta.userID)
         if (SectionClass.createSection(SectionClass,sectionID=sectionID, type=type, course=course, taID=taID)):
-            return redirect('courseDisplay')
+            return render(request, 'createSection.html',
+                          {
+                              'course': course,
+                              'taID': tas,
+                              'types': SectionTypes.choices,
+                              'errorMessage': "Section created successfully"
+                          })
         else:
-            taAssigments = Assignment.objects.filter(courseID=course)
-            tas = []
-            for ta in taAssigments:
-                tas.append(ta.userID)
+
             return render(request, 'createSection.html',
                           {
                               'course': course,
@@ -449,7 +456,7 @@ class EditSection(View):
             s = request.session['userID']
         except KeyError:
             return redirect('login')
-        section = Section.objects.get(sectionID=pk)
+        section = Section.objects.get(pk=pk)
         return render(request, 'editSection.html',
                       {
                           'section': section
