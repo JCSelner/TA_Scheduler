@@ -322,6 +322,27 @@ class CreateUser(View):
         role = request.POST['role']
         first_name = request.POST['firstName']
         last_name = request.POST['lastName']
+
+        account = Account()
+        try:
+            account.set_email(email)
+        except ValueError as e:
+            return render(request, 'createUser.html',
+                          {
+                              'roles': Roles.choices,
+                              'errorMessage': str(e)
+                          })
+
+        try:
+            # Validate the phone number
+            account.set_phone(contact_number)
+        except ValueError as e:
+            return render(request, 'createUser.html',
+                          {
+                              'roles': Roles.choices,
+                              'errorMessage': str(e)
+                          })
+
         if (User.objects.filter(userID=username).exists() or User.objects.filter(email=email).exists()):
             return render(request, 'createUser.html',
                           {
