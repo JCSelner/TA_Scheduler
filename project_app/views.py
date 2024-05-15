@@ -14,6 +14,7 @@ from classes.assignmentClass import AssignmentClass
 class Courses(View):
     def get(self, request):
         try:
+            role = request.session['role']
             s = request.session['userID']
         except KeyError:
             return redirect('login')
@@ -21,7 +22,8 @@ class Courses(View):
         return render(request, 'courses.html',
                       {
                           "courses": courses,
-
+                          'user_session': s,
+                          'role': role,
                       })
 
     def post(self, request):
@@ -85,11 +87,13 @@ class ManageCourse(View):
 
     def get(self, request):
         try:
+            role = request.session['role']
             s = request.session['userID']
         except KeyError:
             return redirect('login')
         return render(request, 'manageCourses.html',
                       {
+                          'role': role,
                           'user_session': s
                       })
 
@@ -104,6 +108,7 @@ class CreateCourse(View):
         return render(request, 'createCourse.html',
                       {
                           "semester": semesters,
+                          'user_session': s,
                           "seasons": Seasons.choices,
                           "errorMessage": ""
                       })
@@ -150,12 +155,19 @@ class Login(View):
             # Determine the role of the user based on their 'username' and 'password'.
             user_role = User.objects.filter(userID=username, password=password).values('role')
             # Verify their role and redirect to appropriate homepage.
+            # Also, the user's role becomes stored in the session data.
+            # This is done to carry over the role of the user to different pages,
+            # allowing for different functionality to be managed such as redirecting based on role,
+            # or denying certain actions from being displayed.
             for role in user_role:
                 if role['role'] == 'Admin':
+                    request.session['role'] = role['role']
                     return redirect('home')
                 elif role['role'] == 'Instructor':
+                    request.session['role'] = role['role']
                     return redirect('instructor_home')
                 elif role['role'] == 'TA':
+                    request.session['role'] = role['role']
                     return redirect('teaching_assistant_home')
         else:
             error_message = "Invalid username or password."
@@ -170,11 +182,13 @@ class Home(View):
     # Handle the HTTP GET request, by simply rendering the 'home.html' page.
     def get(self, request):
         try:
+            role = request.session['role']
             s = request.session['userID']
         except KeyError:
             return redirect('login')
         return render(request, 'home.html',
                       {
+                          'role': role,
                           'user_session': s
                       })
 
@@ -182,6 +196,7 @@ class Home(View):
 class InstructorHome(View):
     def get(self, request):
         try:
+            role = request.session['role']
             s = request.session['userID']
         except KeyError:
             return redirect('login')
@@ -189,7 +204,25 @@ class InstructorHome(View):
         return render(request, 'instructor_home.html',
                       {
                           'user_session': s,
+                          'role': role,
                           'users': users
+                      })
+
+
+class InstructorCoursePage(View):
+    def get(self, request):
+        try:
+            role = request.session['role']
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
+        courses = Course.objects.all()
+        return render(request, 'view_courses.html',
+                      {
+                          'user_session': s,
+                          'courses': courses,
+                          'role': role,
+                          'season': Seasons.choices
                       })
 
 
@@ -362,6 +395,7 @@ class UserDisplay(View):
         sections = Section.objects.filter(taID=user)
         return render(request, 'userDisplay.html',
                       {
+                          'user_session': s,
                           'user': user,
                           'assignments': assignments,
                           'sections': sections
@@ -371,6 +405,7 @@ class UserDisplay(View):
 class CourseDisplay(View):
     def get(self, request, pk):
         try:
+            role = request.session['role']
             s = request.session['userID']
         except KeyError:
             return redirect('login')
@@ -381,7 +416,9 @@ class CourseDisplay(View):
                       {
                           'course': course,
                           'assignments': assignments,
-                          'sections': sections
+                          'sections': sections,
+                          'user_session': s,
+                          'role': role
                       })
 
 
@@ -394,6 +431,7 @@ class EditUser(View):
         user = User.objects.get(pk=pk)
         return render(request, 'editUser.html',
                       {
+                          'user_session': s,
                           'user': user
                       })
 
@@ -405,6 +443,7 @@ class EditUser(View):
         user.address = request.POST.get('address')
         user.save()
         return HttpResponse('User updated successfully')
+
 
 class CreateSection(View):
     def get(self, request, pk):
@@ -420,6 +459,7 @@ class CreateSection(View):
 
         return render(request, 'createSection.html',
                       {
+                          'user_session': s,
                           'course': course,
                           'taID': tas,
                           'types': SectionTypes.choices,
@@ -472,6 +512,7 @@ class EditSection(View):
             tas.append(ta.userID)
         return render(request, 'editSection.html',
                       {
+                          'user_session': s,
                           'course': course,
                           'section': section,
                           'taID': tas,
@@ -485,13 +526,20 @@ class EditSection(View):
         section.taID = User.objects.get(userID=taName)
         section.save()
         return HttpResponse("Section updated successfully")
+
+
 class AssignToCourse(View):
     def get(self, request, pk):
+        try:
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
         course = Course.objects.get(courseID=pk)
         assignments = Assignment.objects.filter(courseID=course)
         users = User.objects.all().exclude(role=Roles.ADMIN)
         return render(request, 'user2course.html',
                       {
+                          'user_session': s,
                           'assignments': assignments,
                           'users': users,
                           'course': course,
