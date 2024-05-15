@@ -37,6 +37,10 @@
                     {% csrf_token %}
                     <button type="submit" class="button">View Page</button>
                 </form>
+                <form action="{% url 'deleteSection' pk=s.sectionID %}" method="get">
+                    {% csrf_token %}
+                    <button type="submit" class="button">Delete</button>
+                </form>
             </td>
         </tr>
     {% endfor %}

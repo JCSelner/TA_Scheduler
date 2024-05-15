@@ -481,21 +481,22 @@ class CreateSection(View):
         for ta in taAssigments:
             tas.append(ta.userID)
         if (SectionClass.createSection(SectionClass,sectionID=sectionID, type=type, course=course, taID=taID)):
+            errorMessage = "Section created successfully"
             return render(request, 'createSection.html',
                           {
                               'course': course,
                               'taID': tas,
                               'types': SectionTypes.choices,
-                              'errorMessage': "Section created successfully"
+                              'errorMessage': errorMessage
                           })
         else:
-
+            errorMessage = "Section already exists"
             return render(request, 'createSection.html',
                           {
                               'course': course,
                               'taID': tas,
                               'types': SectionTypes.choices,
-                              'errorMessage': "Failed to create Section."
+                              'errorMessage': errorMessage
                           })
 
 class EditSection(View):
@@ -516,17 +517,45 @@ class EditSection(View):
                           'course': course,
                           'section': section,
                           'taID': tas,
-                          'types': SectionTypes.choices
+                          'types': SectionTypes.choices,
+                          'message': ""
                       })
 
     def post(self, request, pk):
-        section = Section.objects.get(pk=pk)
+        try:
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
+        section = Section.objects.get(sectionID=pk)
+        course= section.course
         section.type = request.POST.get('type')
         taName = request.POST.get('taID')
         section.taID = User.objects.get(userID=taName)
         section.save()
-        return HttpResponse("Section updated successfully")
-
+        return render(request, 'editSection.html',
+                      {
+                          'user_session': s,
+                          'course': course,
+                          'section': section,
+                          'taID': taName,
+                          'types': SectionTypes.choices,
+                          'message': ""
+                        })
+class DeleteSection(View):
+    def post(self, request, pk):
+        course = Course.objects.get(courseID=pk)
+        course_id = request.POST.get('courseID')
+        course_ID = int(course_id)
+        assignments = Assignment.objects.filter(courseID=course_ID)
+        sections = Section.objects.filter(course=course_ID)
+        sectionID=request.POST.get('sectionID')
+        Section.objects.filter(sectionID=sectionID).delete()
+        return render(request, "courseDisplay.html",{
+            "course": course,
+            "sections": sections,
+            "assignments": assignments,
+            "errorMessage": ""
+        })
 
 class AssignToCourse(View):
     def get(self, request, pk):

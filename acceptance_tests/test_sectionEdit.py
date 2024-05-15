@@ -11,7 +11,7 @@ class CourseSectionTestCase(TestCase):
                                         firstName="tmpFirst", lastName="tmpLast", role='TA', address="tmp House")
 
     def test_AC1(self):
-        resp = self.client.post('/createSection/', {'Type': self.semester, 'TA': self.user}, follow=True)
+        resp = self.client.post('/editSection/', {'Type': self.semester, 'TA': self.user}, follow=True)
         self.assertEqual(resp.redirect_chain, [], "No redirect expected")
 
     def test_AC2(self):
