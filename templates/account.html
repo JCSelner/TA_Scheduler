@@ -12,7 +12,9 @@
 <div class="container center">
     <h2>Navigation</h2>
     <ul>
-        <li><a href='{% url 'createUser' %}'>Create User</a></li>
+        {% if role == 'Admin' %}
+            <li><a href='{% url 'createUser' %}'>Create User</a></li>
+        {% endif %}
         <li><a href="{% url 'deleteUser' %}">View User(s)</a></li>
         <li><a href="{% url 'home' %}">Back to Homepage</a></li>
     </ul>
