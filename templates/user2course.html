@@ -1,21 +1,36 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/create_user_style.css' %}">
     <title>Title</title>
 </head>
 <body>
 <h1>Assign to course</h1>
-<form action="{% url 'assignToCourse' pk=course.courseID %}" method="post" class="form">
+<div class = "container">
+
+    <form action="{% url 'assignToCourse' pk=course.courseID %}" method="post" class="form">
     {% csrf_token %}
-    User:
-    <select name="User" >
-        {% for i in users %}
-            <option>{{i}}</option>
-        {% endfor %}
-    </select>
-    <input type="submit"/>
-</form>
+        <table>
+            <tr>
+                <th>User:</th>
+                <td>
+                    <select name="User" >
+                        {% for i in users %}
+                        <option>{{i}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td> <button type="submit" class="button">Create</button> </td>
+            </tr>
+        </table>
+    </form>
+
+</div>
 {{ message }}
 Users:
 <table>

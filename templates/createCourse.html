@@ -9,23 +9,70 @@
 <body>
 <h1 class="header">Create Course</h1>
 <div class="container">
+<table>
 <form action="/createCourse/" method="post" class="form">
 {% csrf_token %}
-    Name:
-    <input name="Name" type="text"/>
-    Semester:
-    <select name="Semester" >
-    {% for i in semester %}
-        <option>{{i}}</option>
-    {% endfor %}
-    </select>
-    Description:
-    <input name="Description" type="text"/>
-    <input type="submit"/>
-
+    <tr>
+        <th>Name:</th>
+        <td>
+            <input name="Name" type="text"/>
+        </td>
+    </tr>
+    <tr></tr>
+    <tr>
+        <th>Semester:</th>
+        <td>
+            <select name="Semester" >
+            {% for i in semester %}
+                <option>{{i}}</option>
+            {% endfor %}
+            </select>
+        </td>
+    </tr>
+    <tr></tr>
+    <tr>
+        <th>Description:</th>
+        <td>
+            <input name="Description" type="text"/>
+        </td>
+    </tr>
+    <tr>
+        <td><button type="submit" class="button">Create</button></td>
+    </tr>
 </form>
+</table>
 </div>
-<h1>{{errorMessage}}</h1>
+<h2>{{errorMessage}}</h2>
+<h2 class="tableHeader" >Create New Semester</h2>
+<div class = "container">
+
+    <form action="/courses/" method="post">
+    {% csrf_token %}
+        <table>
+            <tr>
+                <th>Season:</th>
+                <td>
+                        <select name="Season">
+                            {% for i in seasons %}
+                                <option >{{i.1}}</option>
+                            {% endfor %}
+                         </select>
+                    </td>
+            </tr>
+            <tr>
+                <th>Year:</th>
+                <td>
+                    <input name="Year" type="number"/>
+                </td>
+            </tr>
+            <tr>
+                <td><button type="submit" class="button">Create</button></td>
+            </tr>
+        </table>
+    </form>
+
+</div>
+<h2>{{ semErrorMessage }}</h2>
 <br/><a href="/manageCourse/">Manage Courses</a>
 </body>
 </html>

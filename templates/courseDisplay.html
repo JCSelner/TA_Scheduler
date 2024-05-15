@@ -1,32 +1,51 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/display_style.css' %}">
     <title>Title</title>
 </head>
 <body>
-    <h1>Course Information</h1>
-    <h2>Course Name: {{ course.courseName }}</h2>
-    <h2>Course Description: {{ course.courseDescription}}</h2>
+    <h1 class = "header">Course Information</h1>
+    <div class = "container">
+        <table>
+            <tr>
+                <td><h2>Course Name: {{ course.courseName }}</h2></td>
+            </tr>
+            <tr>
+                <td><h2>Course Description: {{ course.courseDescription}}</h2></td>
+            </tr>
+        </table>
+    </div>
     <h2>Sections: </h2>
-    <table>
+    <table id = user_table>
         {% csrf_token %}
         <tr>
-            <th>Name</th>
+            <th>Section ID</th>
             <th>Type</th>
             <th>TA</th>
+            <th>Action</th>
         </tr>
         {% for s in sections %}
         <tr>
             <td>{{s.sectionID}}</td>
             <td>{{s.type}}</td>
             <td>{{s.taID.userID}}</td>
+            <td>
+                <form action="{% url 'editSection' pk=s.sectionID %}" method="get">
+                    {% csrf_token %}
+                    <button type="submit" class="button" >View Page</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </table>
-
+    <form action="{% url 'createSection' pk=course.courseID %}" method="get" >
+        <button type="submit" class = "pageButton" >Create Section</button>
+    </form>
     <h2>Assigned Users: </h2>
-    <table>
+    <table id = user_table>
         {% csrf_token %}
         <tr>
             <th>First Name</th>
@@ -42,7 +61,7 @@
         {% endfor %}
     </table>
     <form action="{% url 'assignToCourse' pk=course.courseID %}" method="get">
-        <button type="submit" >Assign users to course</button>
+        <button type="submit" class = "pageButton" >Assign users to course</button>
     </form>
     <a href="/courses/">Return to courses</a>
 </body>
