@@ -41,20 +41,6 @@
 
 </table>
 
-Create New Semester
-<form action="/courses/" method="post">
-{% csrf_token %}
-    Season
-    <select name="Season">
-        {% for i in seasons %}
-            <option >{{i.1}}</option>
-        {% endfor %}
-     </select>
-        Year
-    <input name="Year" type="number"/>
-    <input type="submit"/>
-</form>
-{{ errorMessage }}
 
 
 <a href="/manageCourse/">Manage Courses</a>

@@ -13,17 +13,24 @@ body {
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
+.tableHeader {
+    background-color: white;
+    border-radius: 00px;
+    color: black;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 .container {
     display: flex;
     justify-content: center;
     grid-template-columns: 1fr;
     gap: 20px;
-    max-width: 500px;
+    max-width: 1000px;
     margin: 20px auto;
     padding: 20px;
     background-color: #f2f2f2;
-    border-radius: 8px;
+    border-radius: 50px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -56,13 +63,16 @@ input {
 
 h2 {
     margin-top: 0;
+    text-align: center;
 }
 
 ul {
     list-style-type: none;
     padding: 0;
 }
-
+th{
+    font-size: 10px;
+}
 li {
     margin-bottom: 10px;
 }

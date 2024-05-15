@@ -1,19 +1,25 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/display_style.css' %}">
     <title>Title</title>
 </head>
 <body>
-    <h1>User Information</h1>
-    <h2>Username: {{ user.userID }}</h2>
-    <h2>First Name: {{ user.firstName }}</h2>
-    <h2>Last Name: {{ user.lastName }}</h2>
-    <h2>Email: {{ user.email }}</h2>
-    <h2>Phone Number: {{ user.phone }}</h2>
-    <h2>Address: {{ user.address }}</h2>
+    <h1 class = "header">User Information</h1>
+    <div class = "container">
+        <table>
+            <tr><td><h2>Username: {{ user.userID }}</h2></td></tr>
+            <tr><td><h2>First Name: {{ user.firstName }}</h2></td></tr>
+            <tr><td><h2>Last Name: {{ user.lastName }}</h2></td></tr>
+            <tr><td><h2>Email: {{ user.email }}</h2></td></tr>
+            <tr><td><h2>Phone Number: {{ user.phone }}</h2></td></tr>
+            <tr><td><h2>Address: {{ user.address }}</h2></td></tr>
+        </table>
+    </div>
     <h2>Assigned Courses: </h2>
-    <table>
+    <table id = user_table>
         {% csrf_token %}
         <tr>
             <th>Name</th>
@@ -32,7 +38,7 @@
     </table>
 
     <h2>Assigned Sections: </h2>
-    <table>
+    <table id = user_table>
         {% csrf_token %}
         <tr>
             <th>Name</th>

@@ -67,8 +67,8 @@ class Assignment(models.Model):
 class Section(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     taID = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
-    sectionID = models.CharField(max_length=20, primary_key=True, unique=True)
+    sectionID = models.IntegerField(primary_key=True, unique=True)
     type = models.CharField(max_length=10, choices=SectionTypes.choices)
 
     def __str__(self):
-        return self.sectionID + " " + self.type
+        return self.sectionID.__str__() + " " + self.type
