@@ -17,6 +17,7 @@ class CourseSectionTestCase(TestCase):
         self.assertEqual(resp.redirect_chain, [], "No redirect expected")
 
     def test_AC2(self):
-        resp = self.client.post('/createSection/1/', {'Type': self.sectionType, 'TA': self.user}, follow=True)
+        resp = self.client.post('/createSection/1/', {'SectionID': "1", 'Course': self.course,
+                                                      'Type': self.sectionType, 'TA': self.user}, follow=True)
         message = resp.context['errorMessage']
         self.assertEqual(message, 'Section already exists', "Failed to give error message")
