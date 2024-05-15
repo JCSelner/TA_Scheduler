@@ -382,21 +382,26 @@ class DeleteUser(View):
                       })
 
     def post(self, request):
-        # query (filter) for users
-        users = User.objects.filter().all()
-        return render(request, 'deleteUser.html',
-                      {
-                          'roles': Roles.choices,
-                          'users': users
-                      })
-
-
-class ExtendDeleteUsers(View):
-    def post(self, request):
-        users = User.objects.filter().all()
         user_id = request.POST.get('userID')
         user = User.objects.get(userID=user_id)
         user.delete()
+
+        # Redirect to the same page after deletion
+        return redirect('deleteUser')
+
+class ExtendDeleteUsers(View):
+    def post(self, request):
+        user_id = request.POST.get('userID')
+        if user_id:
+            try:
+                user = User.objects.get(userID=user_id)
+                user.delete()
+            except User.DoesNotExist:
+                pass  # Handle the case where the user does not exist
+
+        # Retrieve all users after deletion
+        users = User.objects.all()
+
         return render(request, 'deleteUser.html',
                       {
                           'roles': Roles.choices,
