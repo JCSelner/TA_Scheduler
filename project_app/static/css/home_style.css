@@ -26,9 +26,8 @@
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 4px 90px;
+    margin: 4px 10px; /* Adjust margin as needed */
     cursor: pointer;
-    float: left;
 }
 
 .users_button {
@@ -40,9 +39,8 @@
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 4px 90px;
+    margin: 4px 10px; /* Adjust margin as needed */
     cursor: pointer;
-    float: right;
 }
 
 .logout_button {
@@ -77,4 +75,8 @@ hr {
     border-top: 1px solid #000;
     margin: 1em 0;
     padding: 0;
+}
+
+.button-container {
+    text-align: center;
 }
