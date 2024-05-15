@@ -5,6 +5,9 @@
 </head>
 <body>
     <h1>Edit User</h1>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
     <div style="display: flex;">
         <div style="flex: 1;">
             <h2>Existing User Information</h2>

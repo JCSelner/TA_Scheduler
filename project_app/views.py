@@ -448,6 +448,11 @@ class CourseDisplay(View):
                       })
 
 
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.views import View
+from project_app.models import User
+
 class EditUser(View):
     def get(self, request, pk):
         try:
@@ -463,12 +468,39 @@ class EditUser(View):
 
     def post(self, request, pk):
         user = User.objects.get(pk=pk)
-        user.email = request.POST.get('email')
-        user.phone = request.POST.get('phone')
-        user.role = request.POST.get('role')
-        user.address = request.POST.get('address')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        role = request.POST.get('role')
+        address = request.POST.get('address')
+
+        # Validate email format
+        if not email or '@' not in email:
+            return HttpResponse('Invalid email format')
+
+        # Validate phone format (e.g., must be a certain length or format)
+        if not phone or len(phone) != 10 or not phone.isdigit():
+            message = 'Invalid Phone Number'
+            return render(request, 'editUser.html', {'user': user, 'message': message})
+
+        # Validate role (e.g., must be one of the predefined roles)
+        valid_roles = [r[0] for r in Roles.choices]
+        if role not in valid_roles:
+            message = 'Invalid Role'
+            return render(request, 'editUser.html', {'user': user, 'message': message})
+
+        # Validate address (e.g., must not be empty)
+        if not address:
+            message = 'Please enter an address'
+            return render(request, 'editUser.html', {'user': user, 'message': message})
+
+        # Update user information if validation passes
+        user.email = email
+        user.phone = phone
+        user.role = role
+        user.address = address
         user.save()
-        return HttpResponse('User updated successfully')
+        message = 'User updated successfully'
+        return render(request, 'editUser.html', {'user': user, 'message': message})
 
 
 class CreateSection(View):
