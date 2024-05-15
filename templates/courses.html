@@ -8,8 +8,8 @@
 </head>
 <body>
 
-<h1 class = "header">Courses</h1>
-<table id = "user_table">
+<h1 class="header">Courses</h1>
+<table id="user_table">
     {% csrf_token %}
 
     <tr>
@@ -20,30 +20,25 @@
         <th>Page</th>
     </tr>
     {% for c in courses %}
-    <tr>
-        <td>{{c.courseName}}</td>
-        <td>{{c.courseSemester}}</td>
-        <td>{{c.courseDescription}}</td>
-        <td>
-            <form action="{% url 'extendDeleteCourse' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="courseID" value="{{ c.courseID }}">
-                <button type="submit" class="button">Delete</button>
-            </form>
-        </td>
-        <td>
-            <form action="{% url 'courseDisplay' pk=c.courseID %}" method="get">
-                <button type="submit" class="pageButton">View Page</button>
-            </form>
-        </td>
-    </tr>
+        <tr>
+            <td>{{ c.courseName }}</td>
+            <td>{{ c.courseSemester }}</td>
+            <td>{{ c.courseDescription }}</td>
+            <td>
+                <form action="{% url 'extendDeleteCourse' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="courseID" value="{{ c.courseID }}">
+                    <button type="submit" class="button">Delete</button>
+                </form>
+            </td>
+            <td>
+                <form action="{% url 'courseDisplay' pk=c.courseID %}" method="get">
+                    <button type="submit" class="pageButton">View Page</button>
+                </form>
+            </td>
+        </tr>
     {% endfor %}
-
 </table>
-
-
-
 <a href="/manageCourse/">Manage Courses</a>
-
 </body>
 </html>
