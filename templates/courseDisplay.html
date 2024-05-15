@@ -41,9 +41,11 @@
         </tr>
     {% endfor %}
 </table>
-<form action="{% url 'createSection' pk=course.courseID %}" method="get">
-    <button type="submit" class="pageButton">Create Section</button>
+{% if role == 'Admin' %}
+    <form action="{% url 'createSection' pk=course.courseID %}" method="get">
+    <br><button type="submit" class="pageButton">Create Section</button>
 </form>
+{% endif %}
 <h2>Assigned Users: </h2>
 <table id=user_table>
     {% csrf_token %}
@@ -60,14 +62,16 @@
         </tr>
     {% endfor %}
 </table>
-<form action="{% url 'assignToCourse' pk=course.courseID %}" method="get">
-    <button type="submit" class="pageButton">Assign users to course</button>
+{% if role == 'Admin' %}
+    <form action="{% url 'assignToCourse' pk=course.courseID %}" method="get">
+    <br><button type="submit" class="pageButton">Assign users to course</button>
 </form>
+{% endif %}
 <!-- This logic handles course page redirection based on the role of the user. -->
 {% if role == 'Instructor' %}
-    <a href="{% url 'instructorCoursePage' %}">Return to Courses</a>
+    <br><a href="{% url 'instructorCoursePage' %}">Return to Courses</a>
 {% else %}
-    <a href="{% url 'courses' %}">Return to Courses</a>
+    <br><a href="{% url 'courses' %}">Return to Courses</a>
 {% endif %}
 </body>
 </html>
