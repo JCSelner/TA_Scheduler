@@ -8,13 +8,13 @@ class SectionClass:
         self.course = course
         self.taID = taID
 
-    def sectInDB(self, sectionID=""):
+    def sectInDB(self, sectionID=0):
         sectionList = Section.objects.filter(sectionID=sectionID)
         return len(sectionList) == 1
 
-    def createSection(self, sectionID="", type="", course=Course(), taID=None):
+    def createSection(self, sectionID=0, type="", course=Course(), taID=None):
         # Check for a unique sectionID
-        if self.sectInDB(self, sectionID) or sectionID == "":
+        if self.sectInDB(self, sectionID) or sectionID == 0:
             return False
         # Check for valid section type
         if type != "Lab" and type != "Lecture":

@@ -117,7 +117,7 @@ class CreateCourse(View):
         semester = Semester.objects.filter(year=int(semesterFields[1]), season=semesterFields[0])
 
         description = request.POST.get('Description')
-        if (CourseClass.createCourse(CourseClass, name, semester[0], len(courses) + 1, description)):
+        if (CourseClass.createCourse(CourseClass, name, semester[0],courses[len(courses)-1].courseID + 1, description)):
             return redirect("/manageCourse/")
         else:
             semesters = Semester.objects.all()
@@ -424,7 +424,8 @@ class CreateSection(View):
 
     def post(self, request, pk):
         course = Course.objects.get(courseID=pk)
-        sectionID = request.POST.get('Name')
+        sections = Section.objects.all()
+        sectionID = sections[len(sections) - 1].sectionID + 1
         type = request.POST.get('type')
         taName = request.POST.get('TA')
         taID = User.objects.get(userID=taName)
@@ -456,7 +457,7 @@ class EditSection(View):
             s = request.session['userID']
         except KeyError:
             return redirect('login')
-        section = Section.objects.get(pk=pk)
+        section = Section.objects.get(sectionID=pk)
         return render(request, 'editSection.html',
                       {
                           'section': section

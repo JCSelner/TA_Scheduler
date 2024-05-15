@@ -22,9 +22,10 @@
     <table id = user_table>
         {% csrf_token %}
         <tr>
-            <th>Name</th>
+            <th>Section ID</th>
             <th>Type</th>
             <th>TA</th>
+            <th>Action</th>
         </tr>
         {% for s in sections %}
         <tr>
@@ -32,9 +33,9 @@
             <td>{{s.type}}</td>
             <td>{{s.taID.userID}}</td>
             <td>
-                <form action="{% url 'editSection' pk=s.pk %}" method="get">
+                <form action="{% url 'editSection' pk=s.sectionID %}" method="get">
                     {% csrf_token %}
-                    <button type="submit" >View Page</button>
+                    <button type="submit" class="button" >View Page</button>
                 </form>
             </td>
         </tr>
