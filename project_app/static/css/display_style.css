@@ -13,7 +13,7 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .button {
-    background-color: rgb(207, 41, 41);
+    background-color: rgb(93, 119, 143);
     border: none;
     border-radius: 5px;
     color: white;
@@ -87,6 +87,7 @@ a:hover {
 }
 
 .container {
+    font-size: 12px;
     display: flex;
     justify-content: center;
     grid-template-columns: 1fr;
