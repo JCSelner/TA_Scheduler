@@ -115,9 +115,13 @@ class CreateCourse(View):
         semesterName = request.POST.get('Semester')
         semesterFields = semesterName.split(' ')
         semester = Semester.objects.filter(year=int(semesterFields[1]), season=semesterFields[0])
+        if len(courses) == 0:
+            courseID = 1
+        else:
+            courseID = courses[len(courses) - 1].courseID + 1
 
         description = request.POST.get('Description')
-        if (CourseClass.createCourse(CourseClass, name, semester[0],courses[len(courses)-1].courseID + 1, description)):
+        if (CourseClass.createCourse(CourseClass, name, semester[0],courseID, description)):
             return redirect("/manageCourse/")
         else:
             semesters = Semester.objects.all()
@@ -425,7 +429,10 @@ class CreateSection(View):
     def post(self, request, pk):
         course = Course.objects.get(courseID=pk)
         sections = Section.objects.all()
-        sectionID = sections[len(sections) - 1].sectionID + 1
+        if len(sections) == 0:
+            sectionID = 1
+        else:
+            sectionID = sections[len(sections) - 1].sectionID + 1
         type = request.POST.get('type')
         taName = request.POST.get('TA')
         taID = User.objects.get(userID=taName)

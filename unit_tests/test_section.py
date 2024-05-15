@@ -18,22 +18,22 @@ class testCreateSection(TestCase):
        self.semester2 = Semester.objects.create(season=self.season, year=2025)
        self.courseA = Course.objects.create(courseName='A', courseDescription='test', courseID=1, courseSemester=self.semester1)
        self.courseB = Course.objects.create(courseName='B', courseDescription='test', courseID=2, courseSemester=self.semester2)
-       self.sectionA = Section.objects.create(sectionID="A", type="Lecture", course=self.courseA, taID=self.user)
-       self.sectionB = Section.objects.create(sectionID="B", type="Lab", course=self.courseB, taID=self.user)
+       self.sectionA = Section.objects.create(sectionID=1, type="Lecture", course=self.courseA, taID=self.user)
+       self.sectionB = Section.objects.create(sectionID=2, type="Lab", course=self.courseB, taID=self.user)
 
     def test_noInput(self):
         self.assertFalse(self.section.createSection(), "No inputs, course should not have been created.")
     def test_preExists(self):
-        self.assertFalse(self.section.createSection("A", "Lecture", self.courseA), "Section already exists.")
-        self.assertFalse(self.section.createSection("B", "Lab", self.courseB), "Section already exists.")
+        self.assertFalse(self.section.createSection(1, "Lecture", self.courseA), "Section already exists.")
+        self.assertFalse(self.section.createSection(2, "Lab", self.courseB), "Section already exists.")
     def test_sameID(self):
-        self.assertFalse(self.section.createSection("A", "Lecture", self.courseB), "SectionID already used. Invalid")
-        self.assertFalse(self.section.createSection("B", "Lab", self.courseA), "SectionID already used. Invalid.")
+        self.assertFalse(self.section.createSection(1, "Lecture", self.courseB), "SectionID already used. Invalid")
+        self.assertFalse(self.section.createSection(2, "Lab", self.courseA), "SectionID already used. Invalid.")
     def test_diffName(self):
-        self.assertTrue(self.section.createSection("C", "Lecture", self.courseA, self.user), "Different name. Valid")
-        self.assertTrue(self.section.createSection("D", "Lab", self.courseB, self.user), "Different name. Valid")
+        self.assertTrue(self.section.createSection(3, "Lecture", self.courseA, self.user), "Different name. Valid")
+        self.assertTrue(self.section.createSection(4, "Lab", self.courseB, self.user), "Different name. Valid")
     def test_invalidType(self):
-        self.assertFalse(self.section.createSection("C", "Class", self.courseA), "Invalid Section type.")
+        self.assertFalse(self.section.createSection(3, "Class", self.courseA), "Invalid Section type.")
 class testSectionDeletion(TestCase):
     def setUp(self):
         self.section = SectionClass()
@@ -50,13 +50,13 @@ class testSectionDeletion(TestCase):
                                              courseSemester=self.semester1)
         self.courseB = Course.objects.create(courseName='B', courseDescription='test', courseID=2,
                                              courseSemester=self.semester2)
-        self.sectionA = Section.objects.create(sectionID="A", type="Lecture", course=self.courseA, taID=self.user)
-        self.sectionB = Section.objects.create(sectionID="B", type="Lab", course=self.courseB, taID=self.user)
+        self.sectionA = Section.objects.create(sectionID=1, type="Lecture", course=self.courseA, taID=self.user)
+        self.sectionB = Section.objects.create(sectionID=2, type="Lab", course=self.courseB, taID=self.user)
 
     def test_noInput(self):
         self.assertFalse(self.section.deleteSection(), "No section was chosen for deletion")
     def test_deleteNonexistant(self):
-        self.assertFalse(self.section.deleteSection("C"), "Section does not exist to be deleted")
+        self.assertFalse(self.section.deleteSection(3), "Section does not exist to be deleted")
     def test_deleteExistant(self):
         self.assertTrue(self.section.deleteSection(self.sectionA.sectionID), "Section exists to be deleted")
 class testViewCourses(TestCase):
@@ -75,17 +75,17 @@ class testViewCourses(TestCase):
                                              courseSemester=self.semester1)
         self.courseB = Course.objects.create(courseName='B', courseDescription='test', courseID=2,
                                              courseSemester=self.semester2)
-        self.sectionA = Section.objects.create(sectionID="A", type="Lecture", course=self.courseA, taID=self.user)
-        self.sectionB = Section.objects.create(sectionID="B", type="Lab", course=self.courseB, taID=self.user)
+        self.sectionA = Section.objects.create(sectionID=1, type="Lecture", course=self.courseA, taID=self.user)
+        self.sectionB = Section.objects.create(sectionID=2, type="Lab", course=self.courseB, taID=self.user)
     def test_noInput(self):
         with self.assertRaises(ValueError):
             self.section.viewSection()
     def test_viewExistant(self):
-        self.assertEqual(self.section.viewSection(self.sectionA.sectionID), "A" " Lecture" " 1")
-        self.assertEqual(self.section.viewSection(self.sectionB.sectionID), "B" " Lab" " 2")
+        self.assertEqual(self.section.viewSection(self.sectionA.sectionID), "1" " Lecture" " 1")
+        self.assertEqual(self.section.viewSection(self.sectionB.sectionID), "2" " Lab" " 2")
     def test_viewNonexistant(self):
         with self.assertRaises(ValueError):
-            self.section.viewSection("C")
+            self.section.viewSection(3)
 class testEditSection(TestCase):
     def setUp(self):
         self.course = CourseClass()
@@ -105,8 +105,8 @@ class testEditSection(TestCase):
                                              courseSemester=self.semester1)
         self.courseB = Course.objects.create(courseName='B', courseDescription='test', courseID=2,
                                              courseSemester=self.semester2)
-        self.sectionA = Section.objects.create(sectionID="A", type="Lecture", course=self.courseA, taID=self.user1)
-        self.sectionB = Section.objects.create(sectionID="B", type="Lab", course=self.courseB, taID=self.user2)
+        self.sectionA = Section.objects.create(sectionID=1, type="Lecture", course=self.courseA, taID=self.user1)
+        self.sectionB = Section.objects.create(sectionID=2, type="Lab", course=self.courseB, taID=self.user2)
         self.section = SectionClass()
     def test_noInput(self):
         with self.assertRaises(AttributeError):
@@ -141,14 +141,14 @@ class testSectInDB(TestCase):
                                              courseSemester=self.semester1)
         self.courseB = Course.objects.create(courseName='B', courseDescription='test', courseID=2,
                                              courseSemester=self.semester2)
-        self.sectionA = Section.objects.create(sectionID="A", type="Lecture", course=self.courseA, taID=self.user)
-        self.sectionB = Section.objects.create(sectionID="B", type="Lab", course=self.courseB, taID=self.user)
+        self.sectionA = Section.objects.create(sectionID=1, type="Lecture", course=self.courseA, taID=self.user)
+        self.sectionB = Section.objects.create(sectionID=2, type="Lab", course=self.courseB, taID=self.user)
     def test_noInput(self):
         self.assertFalse(self.section.sectInDB(), "No section was chosen to check.")
     def test_sectExists(self):
         self.assertTrue(self.section.sectInDB(self.sectionA.sectionID), "Section exists to check.")
     def test_sectNotExists(self):
-        self.assertFalse(self.section.sectInDB("C"), "Section does not exist.")
+        self.assertFalse(self.section.sectInDB(3), "Section does not exist.")
 
 
 

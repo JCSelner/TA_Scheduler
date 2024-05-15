@@ -15,6 +15,6 @@ class CourseCreationTestCase(TestCase):
     def test_AC2(self):
         resp = self.client.post('/createCourse/', {'Name': "math101", 'Semester': "Fall 2020", 'Description': "idk"}, follow=True)
         message = resp.context['errorMessage']
-        self.assertEqual(message, "The course is invalid", "failed to give error message")
+        self.assertEqual(message, "math101 Fall 2020 is already in the database", "failed to give error message")
 
 

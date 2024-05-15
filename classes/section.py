@@ -14,7 +14,7 @@ class SectionClass:
 
     def createSection(self, sectionID=0, type="", course=Course(), taID=None):
         # Check for a unique sectionID
-        if self.sectInDB(self, sectionID) or sectionID == 0:
+        if self.sectInDB(sectionID) or sectionID == 0:
             return False
         # Check for valid section type
         if type != "Lab" and type != "Lecture":
@@ -31,13 +31,13 @@ class SectionClass:
         section.save()
         return True
 
-    def deleteSection(self, sectionID=""):
+    def deleteSection(self, sectionID=0):
         if not self.sectInDB(sectionID):
             return False
         Section.objects.filter(sectionID=sectionID).delete()
         return True
 
-    def viewSection(self, sectionID=""):
+    def viewSection(self, sectionID=0):
         if not self.sectInDB(sectionID):
             raise ValueError
         sectionList = Section.objects.filter(sectionID=sectionID)
