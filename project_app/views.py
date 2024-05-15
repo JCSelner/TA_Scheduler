@@ -465,15 +465,24 @@ class EditSection(View):
         except KeyError:
             return redirect('login')
         section = Section.objects.get(sectionID=pk)
+        course = section.course
+        taAssigments = Assignment.objects.filter(courseID=course)
+        tas = []
+        for ta in taAssigments:
+            tas.append(ta.userID)
         return render(request, 'editSection.html',
                       {
-                          'section': section
+                          'course': course,
+                          'section': section,
+                          'taID': tas,
+                          'types': SectionTypes.choices
                       })
 
     def post(self, request, pk):
         section = Section.objects.get(pk=pk)
         section.type = request.POST.get('type')
-        section.taID = request.POST.get('taID')
+        taName = request.POST.get('taID')
+        section.taID = User.objects.get(userID=taName)
         section.save()
         return HttpResponse("Section updated successfully")
 class AssignToCourse(View):
