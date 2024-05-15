@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <title>Edit User</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/edit_user_style.css' %}">
 </head>
 <body>
     <h1>Edit User</h1>
-    {% if message %}
-        <p>{{ message }}</p>
-    {% endif %}
-    <div style="display: flex;">
-        <div style="flex: 1;">
+    <div class="container">
+        <div>
             <h2>Existing User Information</h2>
             <table>
                 <tr>
@@ -42,7 +41,7 @@
                 </tr>
             </table>
         </div>
-        <div style="flex: 1;">
+        <div>
             <h2>Edit User Information</h2>
             <form method="post">
                 {% csrf_token %}
@@ -56,6 +55,8 @@
                 <input type="text" id="address" name="address" value="{{ user.address }}"><br><br>
                 <input type="submit" value="Save Changes">
             </form>
+            <br>
+            <a href="{% url 'deleteUser' %}" class="button">Return to Users Page</a>
         </div>
     </div>
 </body>
