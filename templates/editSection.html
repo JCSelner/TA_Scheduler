@@ -1,12 +1,14 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="{% static 'css/create_user_style.css' %}">
     <title>Edit Section</title>
 </head>
 <body>
     <h1>Edit Section</h1>
-    <div style="display: flex;">
-        <div style="flex: 1;">
+    <div  style="display: flex;" >
+        <div style="flex: 1;" class = container>
             <h2>Existing Section Information</h2>
             <table>
                 <tr>
@@ -27,17 +29,42 @@
                 </tr>
             </table>
         </div>
-        <div style="flex: 1;">
+        <div style="flex: 1;" class = container>
             <h2>Edit Section Information</h2>
             <form method="post">
                 {% csrf_token %}
-                <label for="type">Type:</label><br>
-                <input type="text" id="type" name="type" value="{{ section.type }}"><br>
-                <label for="taID">TA:</label><br>
-                <input type="text" id="taID" name="taID" value="{{ section.taID }}"><br>
-                <input type="submit" value="Save Changes">
+                <table>
+                    <tr>
+                        <th>
+                            <label for="type">Type:</label><br>
+                        </th>
+                        <td>
+                            <select name="type">
+                                {% for type in types %}
+                                    <option value="{{ type.0 }}">{{ type.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <label for="taID">TA:</label><br>
+                        </th>
+                        <td>
+                            <select name="taID">
+                                {% for i in taID %}
+                                    <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="submit" value="Save Changes" class = button></td>
+                    </tr>
+                </table>
             </form>
         </div>
     </div>
+    <a href="{% url 'courseDisplay' pk=course.courseID %}">Course Display</a>
 </body>
 </html>

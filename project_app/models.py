@@ -71,4 +71,4 @@ class Section(models.Model):
     type = models.CharField(max_length=10, choices=SectionTypes.choices)
 
     def __str__(self):
-        return self.sectionID + " " + self.type
+        return self.sectionID.__str__() + " " + self.type
