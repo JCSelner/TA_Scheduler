@@ -1,10 +1,8 @@
-from django.shortcuts import render, redirect
 from django.views import View
-from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons, SectionTypes
+from project_app.models import Course, Assignment, Section, Roles, Semester, Seasons, SectionTypes
 from classes.accounts import Account
 from classes.courseClass import CourseClass
 from classes.section import SectionClass
-from django.http import HttpResponse
 from classes.assignmentClass import AssignmentClass
 
 
