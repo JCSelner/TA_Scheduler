@@ -475,7 +475,8 @@ class EditUser(View):
 
         # Validate email format
         if not email or '@' not in email:
-            return HttpResponse('Invalid email format')
+            message = 'Invalid email'
+            return render(request, 'editUser.html', {'user': user, 'message': message})
 
         # Validate phone format (e.g., must be a certain length or format)
         if not phone or len(phone) != 10 or not phone.isdigit():
