@@ -20,7 +20,7 @@ from django.urls import path
 from project_app.views import (Courses, Login, Logout, Home, InstructorHome, TeachingAssistantHome, CreateCourse,
                                ManageUser, ManageAccount, CreateUser, DeleteUser, ExtendDeleteUsers, ExtendDeleteCourse,
                                ManageCourse, EditUser, CourseDisplay, UserDisplay, CreateSection, EditSection,
-                               AssignToCourse)
+                               AssignToCourse, InstructorCoursePage)
 
 
 urlpatterns = [
@@ -35,6 +35,7 @@ urlpatterns = [
     path('deleteUser/', DeleteUser.as_view(), name='deleteUser'),
     path('deletedUser/', ExtendDeleteUsers.as_view(), name='extendDeleteUser'),
     path('courses/', Courses.as_view(), name='courses'),
+    path('courses/instructor/', InstructorCoursePage.as_view(), name='instructorCoursePage'),
     path('deleteCourse/', ExtendDeleteCourse.as_view(), name='extendDeleteCourse'),
     path('logout/', Logout.as_view(), name='logout'),
     path('createCourse/', CreateCourse.as_view(), name='createCourse'),

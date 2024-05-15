@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/home_style.css' %}">
     <title>Homepage</title>
 </head>
 <body>
-<h1>Homepage</h1>
-<a href="{% url 'logout' %}">Logout</a>
+<h1 class="homepage_header">Homepage</h1>
+<a href="{% url 'logout' %}" class="logout_button">Logout</a>
 <hr/>
+<div class="format-image"><img src="{% static 'images/UWM.png' %}" alt="UWM Logo"></div>
+<a href="{% url 'instructorCoursePage' %}" class="courses_button">View Courses</a>
 {% for i in users %}
     <form action="{% url 'instructor_account' pk=i.pk %}" method="get">
-        <button type="submit">Manage Account</button>
+        <button type="submit" class="users_button">Manage Account</button>
     </form>
 {% endfor %}
 </body>
