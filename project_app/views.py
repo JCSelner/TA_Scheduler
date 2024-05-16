@@ -1,10 +1,8 @@
-from django.shortcuts import render, redirect
 from django.views import View
-from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons, SectionTypes
+from project_app.models import Course, Assignment, Section, Roles, Semester, Seasons, SectionTypes
 from classes.accounts import Account
 from classes.courseClass import CourseClass
 from classes.section import SectionClass
-from django.http import HttpResponse
 from classes.assignmentClass import AssignmentClass
 
 
@@ -324,6 +322,27 @@ class CreateUser(View):
         role = request.POST['role']
         first_name = request.POST['firstName']
         last_name = request.POST['lastName']
+
+        account = Account()
+        try:
+            account.set_email(email)
+        except ValueError as e:
+            return render(request, 'createUser.html',
+                          {
+                              'roles': Roles.choices,
+                              'errorMessage': str(e)
+                          })
+
+        try:
+            # Validate the phone number
+            account.set_phone(contact_number)
+        except ValueError as e:
+            return render(request, 'createUser.html',
+                          {
+                              'roles': Roles.choices,
+                              'errorMessage': str(e)
+                          })
+
         if (User.objects.filter(userID=username).exists() or User.objects.filter(email=email).exists()):
             return render(request, 'createUser.html',
                           {
@@ -363,21 +382,26 @@ class DeleteUser(View):
                       })
 
     def post(self, request):
-        # query (filter) for users
-        users = User.objects.filter().all()
-        return render(request, 'deleteUser.html',
-                      {
-                          'roles': Roles.choices,
-                          'users': users
-                      })
-
-
-class ExtendDeleteUsers(View):
-    def post(self, request):
-        users = User.objects.filter().all()
         user_id = request.POST.get('userID')
         user = User.objects.get(userID=user_id)
         user.delete()
+
+        # Redirect to the same page after deletion
+        return redirect('deleteUser')
+
+class ExtendDeleteUsers(View):
+    def post(self, request):
+        user_id = request.POST.get('userID')
+        if user_id:
+            try:
+                user = User.objects.get(userID=user_id)
+                user.delete()
+            except User.DoesNotExist:
+                pass  # Handle the case where the user does not exist
+
+        # Retrieve all users after deletion
+        users = User.objects.all()
+
         return render(request, 'deleteUser.html',
                       {
                           'roles': Roles.choices,
@@ -424,6 +448,11 @@ class CourseDisplay(View):
                       })
 
 
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.views import View
+from project_app.models import User
+
 class EditUser(View):
     def get(self, request, pk):
         try:
@@ -439,12 +468,40 @@ class EditUser(View):
 
     def post(self, request, pk):
         user = User.objects.get(pk=pk)
-        user.email = request.POST.get('email')
-        user.phone = request.POST.get('phone')
-        user.role = request.POST.get('role')
-        user.address = request.POST.get('address')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        role = request.POST.get('role')
+        address = request.POST.get('address')
+
+        # Validate email format
+        if not email or '@' not in email:
+            message = 'Invalid email'
+            return render(request, 'editUser.html', {'user': user, 'message': message})
+
+        # Validate phone format (e.g., must be a certain length or format)
+        if not phone or len(phone) != 10 or not phone.isdigit():
+            message = 'Invalid Phone Number'
+            return render(request, 'editUser.html', {'user': user, 'message': message})
+
+        # Validate role (e.g., must be one of the predefined roles)
+        valid_roles = [r[0] for r in Roles.choices]
+        if role not in valid_roles:
+            message = 'Invalid Role'
+            return render(request, 'editUser.html', {'user': user, 'message': message})
+
+        # Validate address (e.g., must not be empty)
+        if not address:
+            message = 'Please enter an address'
+            return render(request, 'editUser.html', {'user': user, 'message': message})
+
+        # Update user information if validation passes
+        user.email = email
+        user.phone = phone
+        user.role = role
+        user.address = address
         user.save()
-        return HttpResponse('User updated successfully')
+        message = 'User updated successfully'
+        return render(request, 'editUser.html', {'user': user, 'message': message})
 
 
 class CreateSection(View):
