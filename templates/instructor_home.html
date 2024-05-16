@@ -11,10 +11,15 @@
 <a href="{% url 'logout' %}" class="logout_button">Logout</a>
 <hr/>
 <div class="format-image"><img src="{% static 'images/UWM.png' %}" alt="UWM Logo"></div>
-<a href="{% url 'instructorCoursePage' %}" class="courses_button">View Courses</a>
+{% if role == 'Instructor' %}
+    <a href="{% url 'instructorCoursePage' %}" class="courses_button">View Courses</a>
+{% else %}
+    <a href="{% url 'viewTAs' %}" class="courses_button">View TAs</a>
+{% endif %}
 {% for i in users %}
     <form action="{% url 'instructor_account' pk=i.pk %}" method="get">
-        <button type="submit" class="users_button">Manage Account</button>
+        <button type="submit" class="users_button">Edit Account</button>
+        <br><a href="{% url 'deleteUser' %}" class="users_button">View Users</a>
     </form>
 {% endfor %}
 </body>
