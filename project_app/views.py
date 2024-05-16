@@ -161,12 +161,9 @@ class Login(View):
                 if role['role'] == 'Admin':
                     request.session['role'] = role['role']
                     return redirect('home')
-                elif role['role'] == 'Instructor':
+                else:
                     request.session['role'] = role['role']
                     return redirect('instructor_home')
-                elif role['role'] == 'TA':
-                    request.session['role'] = role['role']
-                    return redirect('teaching_assistant_home')
         else:
             error_message = "Invalid username or password."
             return render(request, 'login.html',
@@ -174,10 +171,12 @@ class Login(View):
                               'error_message': error_message
                           })
 
+
 def public_info(request):
     users = User.objects.all()  # Query all users (adjust this based on your actual model)
     context = {'users': users}
     return render(request, 'publicInfo.html', context)
+
 
 class Home(View):
     # Upon a successful redirect, from 'login.html' to 'home.html'
@@ -373,6 +372,7 @@ class DeleteUser(View):
     def get(self, request):
         try:
             # Carry along the session of the current user to the 'deleteUser.html' page.
+            role = request.session['role']
             s = request.session['userID']
         except KeyError:
             # Handle 'KeyError' exceptions appropriately
@@ -380,6 +380,7 @@ class DeleteUser(View):
         users = User.objects.filter().all()
         return render(request, 'deleteUser.html',
                       {
+                          'role': role,
                           'roles': Roles.choices,
                           'users': users,
                           'user_session': s
@@ -392,6 +393,7 @@ class DeleteUser(View):
 
         # Redirect to the same page after deletion
         return redirect('deleteUser')
+
 
 class ExtendDeleteUsers(View):
     def post(self, request):
@@ -456,6 +458,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views import View
 from project_app.models import User
+
 
 class EditUser(View):
     def get(self, request, pk):
@@ -538,7 +541,7 @@ class CreateSection(View):
             sectionID = sections[len(sections) - 1].sectionID + 1
         type = request.POST.get('type')
         taName = request.POST.get('TA')
-        taID = User.objects.get(userID=taName)
+        taID = User.objects.get(firstName=taName)
         taAssigments = Assignment.objects.filter(courseID=course)
         tas = []
         for ta in taAssigments:
@@ -565,6 +568,7 @@ class CreateSection(View):
 class EditSection(View):
     def get(self, request, pk):
         try:
+            role = request.session['role']
             s = request.session['userID']
         except KeyError:
             return redirect('login')
@@ -576,6 +580,7 @@ class EditSection(View):
             tas.append(ta.userID)
         return render(request, 'editSection.html',
                       {
+                          'role': role,
                           'user_session': s,
                           'course': course,
                           'section': section,
@@ -592,7 +597,7 @@ class EditSection(View):
         course = section.course
         section.type = request.POST.get('type')
         taName = request.POST.get('taID')
-        section.taID = User.objects.get(userID=taName)
+        section.taID = User.objects.get(firstName=taName)
         section.save()
         taAssigments = Assignment.objects.filter(courseID=course)
         tas = []
@@ -630,7 +635,7 @@ class AssignToCourse(View):
 
     def post(self, request, pk):
         course = Course.objects.get(courseID=pk)
-        user = User.objects.get(userID=request.POST.get('User'))
+        user = User.objects.get(firstName=request.POST.get('User'))
         assignments = Assignment.objects.filter(courseID=course)
         users = User.objects.all().exclude(role=Roles.ADMIN)
         if (AssignmentClass.assignUser(AssignmentClass, user.userID, course.courseID)):
@@ -649,3 +654,22 @@ class AssignToCourse(View):
                               'course': course,
                               'message': user.userID + ' is already assigned to the course'
                           })
+
+
+class DisplayTAs(View):
+    def get(self, request):
+        try:
+            role = request.session['role']
+            s = request.session['userID']
+        except KeyError:
+            return redirect('login')
+        users = User.objects.filter(role=Roles.TA).all()
+        assignments = Assignment.objects.all()
+        return render(request, 'view_TAs.html',
+                      {
+                          'role': role,
+                          'roles': Roles.choices,
+                          'users': users,
+                          'assignments': assignments,
+                          'user_session': s
+                      })
