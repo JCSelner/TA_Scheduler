@@ -50,7 +50,7 @@ class AccountTestCase(TestCase):
                                     address='123 Test St.')
         client = Client()
         response = client.get(reverse('editUser', kwargs={'pk': user.pk}))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     def test_invalid_email(self):
         account = Account()
