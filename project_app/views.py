@@ -1,10 +1,8 @@
-from django.shortcuts import render, redirect
 from django.views import View
-from project_app.models import User, Course, Assignment, Section, Roles, Semester, Seasons, SectionTypes
+from project_app.models import Course, Assignment, Section, Roles, Semester, Seasons, SectionTypes
 from classes.accounts import Account
 from classes.courseClass import CourseClass
 from classes.section import SectionClass
-from django.http import HttpResponse
 from classes.assignmentClass import AssignmentClass
 
 
@@ -126,7 +124,7 @@ class CreateCourse(View):
             courseID = courses[len(courses) - 1].courseID + 1
 
         description = request.POST.get('Description')
-        if (CourseClass.createCourse(CourseClass, name, semester[0],courseID, description)):
+        if (CourseClass.createCourse(CourseClass, name, semester[0], courseID, description)):
             return redirect("/manageCourse/")
         else:
             semesters = Semester.objects.all()
@@ -248,11 +246,13 @@ class ManageUser(View):
     def get(self, request):
         try:
             # Carry along the session of the current user to the 'account.html' page.
+            role = request.session['role']
             s = request.session['userID']
         except KeyError:
             return redirect('login')
         return render(request, 'account.html',
                       {
+                          'role': role,
                           'user_session': s
                       })
 
@@ -322,6 +322,27 @@ class CreateUser(View):
         role = request.POST['role']
         first_name = request.POST['firstName']
         last_name = request.POST['lastName']
+
+        account = Account()
+        try:
+            account.set_email(email)
+        except ValueError as e:
+            return render(request, 'createUser.html',
+                          {
+                              'roles': Roles.choices,
+                              'errorMessage': str(e)
+                          })
+
+        try:
+            # Validate the phone number
+            account.set_phone(contact_number)
+        except ValueError as e:
+            return render(request, 'createUser.html',
+                          {
+                              'roles': Roles.choices,
+                              'errorMessage': str(e)
+                          })
+
         if (User.objects.filter(userID=username).exists() or User.objects.filter(email=email).exists()):
             return render(request, 'createUser.html',
                           {
@@ -361,21 +382,26 @@ class DeleteUser(View):
                       })
 
     def post(self, request):
-        # query (filter) for users
-        users = User.objects.filter().all()
-        return render(request, 'deleteUser.html',
-                      {
-                          'roles': Roles.choices,
-                          'users': users
-                      })
-
-
-class ExtendDeleteUsers(View):
-    def post(self, request):
-        users = User.objects.filter().all()
         user_id = request.POST.get('userID')
         user = User.objects.get(userID=user_id)
         user.delete()
+
+        # Redirect to the same page after deletion
+        return redirect('deleteUser')
+
+class ExtendDeleteUsers(View):
+    def post(self, request):
+        user_id = request.POST.get('userID')
+        if user_id:
+            try:
+                user = User.objects.get(userID=user_id)
+                user.delete()
+            except User.DoesNotExist:
+                pass  # Handle the case where the user does not exist
+
+        # Retrieve all users after deletion
+        users = User.objects.all()
+
         return render(request, 'deleteUser.html',
                       {
                           'roles': Roles.choices,
@@ -422,6 +448,11 @@ class CourseDisplay(View):
                       })
 
 
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.views import View
+from project_app.models import User
+
 class EditUser(View):
     def get(self, request, pk):
         try:
@@ -437,12 +468,40 @@ class EditUser(View):
 
     def post(self, request, pk):
         user = User.objects.get(pk=pk)
-        user.email = request.POST.get('email')
-        user.phone = request.POST.get('phone')
-        user.role = request.POST.get('role')
-        user.address = request.POST.get('address')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        role = request.POST.get('role')
+        address = request.POST.get('address')
+
+        # Validate email format
+        if not email or '@' not in email:
+            message = 'Invalid email'
+            return render(request, 'editUser.html', {'user': user, 'message': message})
+
+        # Validate phone format (e.g., must be a certain length or format)
+        if not phone or len(phone) != 10 or not phone.isdigit():
+            message = 'Invalid Phone Number'
+            return render(request, 'editUser.html', {'user': user, 'message': message})
+
+        # Validate role (e.g., must be one of the predefined roles)
+        valid_roles = [r[0] for r in Roles.choices]
+        if role not in valid_roles:
+            message = 'Invalid Role'
+            return render(request, 'editUser.html', {'user': user, 'message': message})
+
+        # Validate address (e.g., must not be empty)
+        if not address:
+            message = 'Please enter an address'
+            return render(request, 'editUser.html', {'user': user, 'message': message})
+
+        # Update user information if validation passes
+        user.email = email
+        user.phone = phone
+        user.role = role
+        user.address = address
         user.save()
-        return HttpResponse('User updated successfully')
+        message = 'User updated successfully'
+        return render(request, 'editUser.html', {'user': user, 'message': message})
 
 
 class CreateSection(View):
@@ -480,24 +539,24 @@ class CreateSection(View):
         tas = []
         for ta in taAssigments:
             tas.append(ta.userID)
-        if (SectionClass.createSection(SectionClass,sectionID=sectionID, type=type, course=course, taID=taID)):
-            errorMessage = "Section created successfully"
+        if (SectionClass.createSection(SectionClass, sectionID=sectionID, type=type, course=course, taID=taID)):
             return render(request, 'createSection.html',
                           {
                               'course': course,
                               'taID': tas,
                               'types': SectionTypes.choices,
-                              'errorMessage': errorMessage
+                              'errorMessage': "Section created successfully"
                           })
         else:
-            errorMessage = "Section already exists"
+
             return render(request, 'createSection.html',
                           {
                               'course': course,
                               'taID': tas,
                               'types': SectionTypes.choices,
-                              'errorMessage': errorMessage
+                              'errorMessage': "Failed to create Section."
                           })
+
 
 class EditSection(View):
     def get(self, request, pk):
@@ -517,35 +576,18 @@ class EditSection(View):
                           'course': course,
                           'section': section,
                           'taID': tas,
-                          'types': SectionTypes.choices,
-                          'message': ""
+                          'types': SectionTypes.choices
                       })
 
     def post(self, request, pk):
-        try:
-            s = request.session['userID']
-        except KeyError:
-            return redirect('login')
-        section = Section.objects.get(sectionID=pk)
-        course= section.course
+        section = Section.objects.get(pk=pk)
         section.type = request.POST.get('type')
         taName = request.POST.get('taID')
         section.taID = User.objects.get(userID=taName)
         section.save()
-        taAssigments = Assignment.objects.filter(courseID=course)
-        tas = []
-        for ta in taAssigments:
-            tas.append(ta.userID)
-        message="Section updated successfully"
-        return render(request, 'editSection.html',
-                      {
-                          'user_session': s,
-                          'course': course,
-                          'section': section,
-                          'taID': tas,
-                          'types': SectionTypes.choices,
-                          'message': message
-                        })
+        return HttpResponse("Section updated successfully")
+
+
 class AssignToCourse(View):
     def get(self, request, pk):
         try:
@@ -569,7 +611,7 @@ class AssignToCourse(View):
         user = User.objects.get(userID=request.POST.get('User'))
         assignments = Assignment.objects.filter(courseID=course)
         users = User.objects.all().exclude(role=Roles.ADMIN)
-        if (AssignmentClass.assignUser(AssignmentClass,user.userID, course.courseID)):
+        if (AssignmentClass.assignUser(AssignmentClass, user.userID, course.courseID)):
             return render(request, 'user2course.html',
                           {
                               'assignments': assignments,

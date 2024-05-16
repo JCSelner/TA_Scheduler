@@ -6,25 +6,25 @@
     <title>Edit Section</title>
 </head>
 <body>
-    <h1>Edit Section</h1>
+    <h1 class="header">Edit Section</h1>
     <div  style="display: flex;" >
         <div style="flex: 1;" class = container>
             <h2>Existing Section Information</h2>
             <table>
                 <tr>
-                    <th>Section ID</th>
+                    <th>Section ID:</th>
                     <td>{{ section.sectionID }}</td>
                 </tr>
                 <tr>
-                    <th>Type</th>
+                    <th>Type:</th>
                     <td>{{ section.type }}</td>
                 </tr>
                 <tr>
-                    <th>Course</th>
-                    <td>{{ user.lastName }}</td>
+                    <th>Course:</th>
+                    <td>{{ course.courseName }}</td>
                 </tr>
                 <tr>
-                    <th>TA</th>
+                    <th>TA:</th>
                     <td>{{ section.taID }}</td>
                 </tr>
             </table>
@@ -65,7 +65,6 @@
             </form>
         </div>
     </div>
-    <a href="{% url 'courseDisplay' pk=course.courseID %}">Course Display</a>
-<br/>{{ message }}
+    <a href="{% url 'courseDisplay' pk=course.courseID %}">Return to Course Display</a>
 </body>
 </html>
