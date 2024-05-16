@@ -42,4 +42,4 @@ class SectionClass:
             raise ValueError
         sectionList = Section.objects.filter(sectionID=sectionID)
         section_view = sectionList[0]
-        return section_view.sectionID + " " + section_view.type + " " + section_view.course.courseID.__str__()
+        return section_view.sectionID.__str__() + " " + section_view.type + " " + section_view.course.courseID.__str__()

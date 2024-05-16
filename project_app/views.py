@@ -541,7 +541,7 @@ class CreateSection(View):
             sectionID = sections[len(sections) - 1].sectionID + 1
         type = request.POST.get('type')
         taName = request.POST.get('TA')
-        taID = User.objects.get(firstName=taName)
+        taID = User.objects.get(userID=taName)
         taAssigments = Assignment.objects.filter(courseID=course)
         tas = []
         for ta in taAssigments:
@@ -635,7 +635,7 @@ class AssignToCourse(View):
 
     def post(self, request, pk):
         course = Course.objects.get(courseID=pk)
-        user = User.objects.get(firstName=request.POST.get('User'))
+        user = User.objects.get(userID=request.POST.get('User'))
         assignments = Assignment.objects.filter(courseID=course)
         users = User.objects.all().exclude(role=Roles.ADMIN)
         if (AssignmentClass.assignUser(AssignmentClass, user.userID, course.courseID)):
