@@ -597,7 +597,7 @@ class EditSection(View):
         course = section.course
         section.type = request.POST.get('type')
         taName = request.POST.get('taID')
-        section.taID = User.objects.get(firstName=taName)
+        section.taID = User.objects.get(userID=taName)
         section.save()
         taAssigments = Assignment.objects.filter(courseID=course)
         tas = []
