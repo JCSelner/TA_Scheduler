@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/delete_user_style.css' %}">
+    <title>Delete User</title>
+</head>
+<body>
+<h1 class="header">View TAs</h1>
+<form action="{% url 'deleteUser' %}" method="post">
+    {% csrf_token %}
+    <br><br>
+
+    <table id="user_table">
+        <tr>
+            <th>Username</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Role</th>
+            {% if role == 'Instructor' or role == 'TA' %}
+                <th>Course</th>
+            {% endif %}
+            {% if role == 'Admin' %}
+                <th>Action</th>
+                <th>Page</th>
+            {% endif %}
+        </tr>
+        {% for i in users %}
+            <tr>
+                <td>{{ i.userID }}</td>
+                <td>{{ i.firstName }}</td>
+                <td>{{ i.lastName }}</td>
+                <td>{{ i.role }}</td>
+                {% for assignment in assignments %}
+                    {% if forloop.first %}
+                        <td>{{ assignment.courseID.courseName }}</td>
+                    {% endif %}
+                {% endfor %}
+                {% if role == 'Admin' %}
+                    <td>
+                        <form action="{% url 'extendDeleteUser' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="userID" value="{{ i.userID }}">
+                            <button type="submit" class="button">Delete</button>
+                        </form>
+                        <form action="{% url 'editUser' pk=i.pk %}" method="get">
+                            <button type="submit" id="edit">Edit</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{% url 'userDisplay' pk=i.pk %}" method="get">
+                            <button type="submit" class="pageButton">View Page</button>
+                        </form>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+</form>
+<ul>
+    {% if role == 'Admin' %}
+        <li><a href="{% url 'manageUser' %}">Return to Manage User</a></li>
+    {% else %}
+        <a href="{% url 'instructor_home' %}">Return to Homepage</a>
+    {% endif %}
+</ul>
+</body>
+</html>
