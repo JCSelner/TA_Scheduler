@@ -126,7 +126,7 @@ class CreateCourse(View):
             courseID = courses[len(courses) - 1].courseID + 1
 
         description = request.POST.get('Description')
-        if (CourseClass.createCourse(CourseClass, name, semester[0],courseID, description)):
+        if (CourseClass.createCourse(CourseClass, name, semester[0], courseID, description)):
             return redirect("/manageCourse/")
         else:
             semesters = Semester.objects.all()
@@ -248,11 +248,13 @@ class ManageUser(View):
     def get(self, request):
         try:
             # Carry along the session of the current user to the 'account.html' page.
+            role = request.session['role']
             s = request.session['userID']
         except KeyError:
             return redirect('login')
         return render(request, 'account.html',
                       {
+                          'role': role,
                           'user_session': s
                       })
 
@@ -480,7 +482,7 @@ class CreateSection(View):
         tas = []
         for ta in taAssigments:
             tas.append(ta.userID)
-        if (SectionClass.createSection(SectionClass,sectionID=sectionID, type=type, course=course, taID=taID)):
+        if (SectionClass.createSection(SectionClass, sectionID=sectionID, type=type, course=course, taID=taID)):
             return render(request, 'createSection.html',
                           {
                               'course': course,
@@ -497,6 +499,7 @@ class CreateSection(View):
                               'types': SectionTypes.choices,
                               'errorMessage': "Failed to create Section."
                           })
+
 
 class EditSection(View):
     def get(self, request, pk):
@@ -551,7 +554,7 @@ class AssignToCourse(View):
         user = User.objects.get(userID=request.POST.get('User'))
         assignments = Assignment.objects.filter(courseID=course)
         users = User.objects.all().exclude(role=Roles.ADMIN)
-        if (AssignmentClass.assignUser(AssignmentClass,user.userID, course.courseID)):
+        if (AssignmentClass.assignUser(AssignmentClass, user.userID, course.courseID)):
             return render(request, 'user2course.html',
                           {
                               'assignments': assignments,
