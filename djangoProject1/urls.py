@@ -21,12 +21,13 @@ from project_app import views
 from project_app.views import (Courses, Login, Logout, Home, InstructorHome, TeachingAssistantHome, CreateCourse,
                                ManageUser, ManageAccount, CreateUser, DeleteUser, ExtendDeleteUsers, ExtendDeleteCourse,
                                ManageCourse, EditUser, CourseDisplay, UserDisplay, CreateSection, EditSection,
-                               AssignToCourse, InstructorCoursePage)
+                               AssignToCourse, InstructorCoursePage, DisplayTAs)
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('publicInfo/', views.public_info, name='public_info'),
+    path('viewTAs/', DisplayTAs.as_view(), name='viewTAs'),
     path('', Login.as_view(), name='login'),
     path('home/', Home.as_view(), name='home'),
     path('home/instructor/', InstructorHome.as_view(), name='instructor_home'),
