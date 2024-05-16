@@ -174,6 +174,10 @@ class Login(View):
                               'error_message': error_message
                           })
 
+def public_info(request):
+    users = User.objects.all()  # Query all users (adjust this based on your actual model)
+    context = {'users': users}
+    return render(request, 'publicInfo.html', context)
 
 class Home(View):
     # Upon a successful redirect, from 'login.html' to 'home.html'

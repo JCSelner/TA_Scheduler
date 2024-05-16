@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from project_app import views
 from project_app.views import (Courses, Login, Logout, Home, InstructorHome, TeachingAssistantHome, CreateCourse,
                                ManageUser, ManageAccount, CreateUser, DeleteUser, ExtendDeleteUsers, ExtendDeleteCourse,
                                ManageCourse, EditUser, CourseDisplay, UserDisplay, CreateSection, EditSection,
@@ -25,6 +26,7 @@ from project_app.views import (Courses, Login, Logout, Home, InstructorHome, Tea
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('publicInfo/', views.public_info, name='public_info'),
     path('', Login.as_view(), name='login'),
     path('home/', Home.as_view(), name='home'),
     path('home/instructor/', InstructorHome.as_view(), name='instructor_home'),
