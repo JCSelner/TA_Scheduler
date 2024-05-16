@@ -16,7 +16,7 @@ class CourseSectionTestCase(TestCase):
 
     def test_AC1(self):
         client = Client()
-        response = client.post('/editSection/1/', {'section': self.section, 'type': "Lecture", 'user': tmpUser2}, follow=True)
+        response = client.post('/editSection/1/', {'section': self.section, 'type': "Lecture", 'user': 'tmpUser2'}, follow=True)
         self.assertEqual(response.status_code, 200)
         self.section.refresh_from_db()
         self.assertEqual(self.section.type, "Lecture")
